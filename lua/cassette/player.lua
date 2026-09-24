@@ -20,4 +20,9 @@ function player.startVideo(source)
 	runCommand(command)
 end
 
+function player.startMusic(source)
+	local command = source.format("mpv --input-ipc-server=/tmp/mpv-$$-socket --no-video %s", source)
+	runCommand(command)
+end
+
 return player
