@@ -3,11 +3,13 @@ local cassette = {}
 local player = require("cassette.player")
 
 function cassette.startVideo(source)
-	player.startVideo(source)
+	local videoPlayer = player.new(source)
+	videoPlayer:startVideo()
 end
 
 function cassette.startMusic(source)
-	player.startMusic(source)
+	local musicPlayer = player.new(source)
+	musicPlayer:startMusic()
 end
 
 return cassette

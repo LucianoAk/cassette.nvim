@@ -1,4 +1,14 @@
-local player = {}
+local Player = {}
+Player.__index = Player
+
+function Player.new(source)
+	local self = setmetatable({}, Player)
+
+	self.source = source
+	self.pid = nil
+
+	return self
+end
 
 local function runCommand(command)
 	local handle
@@ -15,14 +25,14 @@ local function runCommand(command)
 	vim.notify("Started player with PID: " .. handle.pid, vim.log.levels.INFO)
 end
 
-function player.startVideo(source)
-	local command = source.format("mpv --input-ipc-server=/tmp/mpv-$$-socket %s", source)
+function Player:startVideo()
+	local command = "mpv --input-ipc-server=/tmp/mpv-$$-socket " .. self.source
 	runCommand(command)
 end
 
-function player.startMusic(source)
-	local command = source.format("mpv --input-ipc-server=/tmp/mpv-$$-socket --no-video %s", source)
+function Player:startMusic()
+	local command = "mpv --input-ipc-server=/tmp/mpv-$$-socket --no-video " .. self.source
 	runCommand(command)
 end
 
-return player
+return Player
