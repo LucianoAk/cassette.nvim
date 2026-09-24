@@ -1,6 +1,5 @@
-vim.api.nvim_create_user_command("CassetteStart", function(opts)
-	require("cassette").start(opts.args)
+vim.api.nvim_create_user_command("VideoCassetteStart", function(opts)
+	require("cassette").startVideo(opts.args)
 end, {
 	nargs = 1,
-	complete = "file",
 })
