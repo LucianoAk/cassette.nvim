@@ -79,4 +79,8 @@ local function getProperty(socket, property)
 	return nil
 end
 
+function Player:getTitle()
+	return getProperty(self.socket, "media-title")
+end
+
 return Player

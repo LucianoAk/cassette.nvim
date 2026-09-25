@@ -15,7 +15,7 @@ local function getPlatformIcon(url)
 end
 
 function ui.getStatusLine()
-	local mediaTitle = player.focus:getProperty("force-media-title")
+	local mediaTitle = player:getTitle()
 	if not mediaTitle or mediaTitle == "" or mediaTitle == vim.NIL then
 		return ""
 	end
