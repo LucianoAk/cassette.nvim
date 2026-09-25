@@ -1,3 +1,5 @@
+local executor = require("cassette.utils.executor")
+
 local Player = {}
 Player.__index = Player
 
@@ -13,8 +15,6 @@ function Player.new(source)
 
 	return self
 end
-
-local executor = require("cassette.utils.executor")
 
 local function _start(source, extra_flags)
 	local base_args = {
@@ -32,14 +32,13 @@ local function _start(source, extra_flags)
 	local cmd = table.concat(base_args, " ")
 	local handle = executor.run(cmd, {
 		on_start = function(h)
-			vim.notify("Started player with PID: " .. h.pid, vim.log.levels.INFO)
+			vim.notify("Starting player with PID: " .. h.pid, vim.log.levels.INFO)
 		end,
 		on_exit = function(result, h)
 			if result.code == 0 then
 				vim.notify("Stopped player PID: " .. h.pid, vim.log.levels.INFO)
 			else
 				local err_msg = string.format("--- Error (Exit code: %d) ---\n%s", result.code, result.stderr)
-				print(err_msg)
 				vim.notify(err_msg, vim.log.levels.ERROR)
 			end
 		end,
