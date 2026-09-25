@@ -16,38 +16,44 @@ end
 
 local executor = require("cassette.utils.executor")
 
-function Player:startVideo()
-	local pid = executor.run("mpv --input-ipc-server=/tmp/mpv-$$-socket " .. self.source, {
-		on_start = function(handle)
-			vim.notify("Started player with PID: " .. handle.pid, vim.log.levels.INFO)
+local function _start(source, extra_flags)
+	local base_args = {
+		"mpv",
+		"--input-ipc-server=/tmp/mpv-$$-socket",
+	}
+
+	for _, flag in ipairs(extra_flags or {}) do
+		table.insert(base_args, flag)
+	end
+
+	-- Add the source at the very end
+	table.insert(base_args, source)
+
+	local cmd = table.concat(base_args, " ")
+	local handle = executor.run(cmd, {
+		on_start = function(h)
+			vim.notify("Started player with PID: " .. h.pid, vim.log.levels.INFO)
 		end,
-		on_exit = function(result, handle)
+		on_exit = function(result, h)
 			if result.code == 0 then
-				vim.notify("Stopped player PID: " .. handle.pid, vim.log.levels.INFO)
+				vim.notify("Stopped player PID: " .. h.pid, vim.log.levels.INFO)
 			else
-				print("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr)
-				vim.notify("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr, vim.log.levels.ERROR)
+				local err_msg = string.format("--- Error (Exit code: %d) ---\n%s", result.code, result.stderr)
+				print(err_msg)
+				vim.notify(err_msg, vim.log.levels.ERROR)
 			end
 		end,
-	}).pid
-	self.socket = "/tmp/mpv-" .. pid .. "-socket"
+	})
+
+	return handle
+end
+
+function Player:startVideo()
+	_start(self.source)
 end
 
 function Player:startMusic()
-	local pid = executor.run("mpv --input-ipc-server=/tmp/mpv-$$-socket --no-video " .. self.source, {
-		on_start = function(handle)
-			vim.notify("Started player with PID: " .. handle.pid, vim.log.levels.INFO)
-		end,
-		on_exit = function(result, handle)
-			if result.code == 0 then
-				vim.notify("Stopped player PID: " .. handle.pid, vim.log.levels.INFO)
-			else
-				print("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr)
-				vim.notify("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr, vim.log.levels.ERROR)
-			end
-		end,
-	}).pid
-	self.socket = "/tmp/mpv-" .. pid .. "-socket"
+	_start(self.source, { "--no-video" })
 end
 
 local function getProperty(socket, property)
