@@ -2,7 +2,7 @@ local ui = {}
 
 local player = require("cassette.player")
 
-local function getPlatformIcon(url)
+local function _getPlatformIcon(url)
 	if url:match("youtube%.com") or url:match("youtu%.be") then
 		return "󰗃 "
 	elseif url:match("twitch%.tv") then
@@ -20,9 +20,9 @@ function ui.getStatusLine()
 		return ""
 	end
 
-	local icon = getPlatformIcon(player.focus:getProperty("path"))
+	local icon = _getPlatformIcon(player.focus:getProperty("path"))
 
-	local result = string.format("%s %s ", icon, mediaTitle)
+	local result = string.format("%s Playing: [ %s ]", icon, mediaTitle)
 	return result
 end
 
