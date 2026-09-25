@@ -14,42 +14,77 @@ function Player.new(source)
 	return self
 end
 
-local function runCommand(command)
+local function runCommand(cmd, opts)
+	opts = opts or {}
+
+	local args = cmd
+	if type(cmd) == "string" then
+		if vim.uv.os_uname().sysname == "Windows_NT" then
+			args = { "cmd.exe", "/c", cmd }
+		else
+			args = { "sh", "-c", cmd }
+		end
+	end
+
 	local handle
-	handle = vim.system({ "sh", "-c", command }, function(result)
-		vim.schedule(function()
-			if result.code == 0 then
-				vim.notify("Stopped player PID:" .. handle.pid)
-			else
-				print("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr)
-			end
-		end)
+	handle = vim.system(args, opts.system_opts or {}, function(result)
+		if opts.on_exit then
+			vim.schedule(function()
+				opts.on_exit(result, handle)
+			end)
+		end
 	end)
 
-	vim.notify("Started player with PID: " .. handle.pid, vim.log.levels.INFO)
+	if opts.on_start and handle then
+		opts.on_start(handle)
+	end
 
-	return handle.pid
+	return handle
 end
 
 function Player:startVideo()
-	local pid = runCommand("mpv --input-ipc-server=/tmp/mpv-$$-socket " .. self.source)
+	local pid = runCommand("mpv --input-ipc-server=/tmp/mpv-$$-socket " .. self.source, {
+		on_start = function(handle)
+			vim.notify("Started player with PID: " .. handle.pid, vim.log.levels.INFO)
+		end,
+		on_exit = function(result, handle)
+			if result.code == 0 then
+				vim.notify("Stopped player PID: " .. handle.pid, vim.log.levels.INFO)
+			else
+				print("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr)
+				vim.notify("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr, vim.log.levels.ERROR)
+			end
+		end,
+	}).pid
 	self.socket = "/tmp/mpv-" .. pid .. "-socket"
 end
 
 function Player:startMusic()
-	local pid = runCommand("mpv --input-ipc-server=/tmp/mpv-$$-socket --no-video " .. self.source)
+	local pid = runCommand("mpv --input-ipc-server=/tmp/mpv-$$-socket --no-video " .. self.source, {
+		on_start = function(handle)
+			vim.notify("Started player with PID: " .. handle.pid, vim.log.levels.INFO)
+		end,
+		on_exit = function(result, handle)
+			if result.code == 0 then
+				vim.notify("Stopped player PID: " .. handle.pid, vim.log.levels.INFO)
+			else
+				print("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr)
+				vim.notify("--- Error (Exit code: " .. result.code .. ") ---\n" .. result.stderr, vim.log.levels.ERROR)
+			end
+		end,
+	}).pid
 	self.socket = "/tmp/mpv-" .. pid .. "-socket"
 end
 
-function Player:getProperty(property)
+local function getProperty(socket, property)
 	local cmd_table = { command = { "get_property", property } }
 	local payload = vim.fn.json_encode(cmd_table) .. "\n"
 
 	local system_args = {}
 	if vim.fn.executable("socat") == 1 then
-		system_args = { "socat", "-", self.socket }
+		system_args = { "socat", "-", socket }
 	elseif vim.fn.executable("nc") == 1 then
-		system_args = { "nc", "-U", self.socket }
+		system_args = { "nc", "-U", socket }
 	else
 		vim.notify("Neither socat nor nc is available for mpv IPC.", vim.log.levels.ERROR)
 		return nil
