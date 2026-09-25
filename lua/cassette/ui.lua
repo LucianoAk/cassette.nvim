@@ -15,12 +15,12 @@ local function _getPlatformIcon(url)
 end
 
 function ui.getStatusLine()
-	local mediaTitle = player:getTitle()
+	local mediaTitle = player.focus:getTitle()
 	if not mediaTitle or mediaTitle == "" or mediaTitle == vim.NIL then
 		return ""
 	end
 
-	local icon = _getPlatformIcon(player.focus:getProperty("path"))
+	local icon = _getPlatformIcon(player.focus:getPath())
 
 	local result = string.format("%s Playing: [ %s ]", icon, mediaTitle)
 	return result

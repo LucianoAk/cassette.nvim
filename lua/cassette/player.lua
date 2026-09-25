@@ -47,14 +47,16 @@ local function _start(source, extra_flags)
 end
 
 function Player:startVideo()
-	_start(self.source)
+	local pid = _start(self.source).pid
+	self.socket = "/tmp/mpv-" .. pid .. "-socket"
 end
 
 function Player:startMusic()
-	_start(self.source, { "--no-video" })
+	local pid = _start(self.source, { "--no-video" }).pid
+	self.socket = "/tmp/mpv-" .. pid .. "-socket"
 end
 
-local function getProperty(socket, property)
+local function _getProperty(socket, property)
 	local cmd_table = { command = { "get_property", property } }
 	local payload = vim.fn.json_encode(cmd_table) .. "\n"
 
@@ -84,7 +86,12 @@ local function getProperty(socket, property)
 end
 
 function Player:getTitle()
-	return getProperty(self.socket, "media-title")
+	local result = _getProperty(self.socket, "media-title")
+	return result
+end
+
+function Player:getPath()
+	return _getProperty(self.socket, "path")
 end
 
 return Player
