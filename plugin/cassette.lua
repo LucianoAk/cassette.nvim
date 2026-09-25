@@ -9,3 +9,8 @@ vim.api.nvim_create_user_command("MusicCassetteStart", function(opts)
 end, {
 	nargs = 1,
 })
+
+vim.api.nvim_create_user_command("GetUIStatusLine", function()
+	local status_text = require("cassette").getUIStatusLine()
+	vim.notify(status_text)
+end, {})
