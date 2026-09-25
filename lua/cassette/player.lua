@@ -26,7 +26,6 @@ local function _start(source, extra_flags)
 		table.insert(base_args, flag)
 	end
 
-	-- Add the source at the very end
 	table.insert(base_args, source)
 
 	local cmd = table.concat(base_args, " ")
