@@ -6,6 +6,24 @@ Player.__index = Player
 
 Player.focus = nil
 
+local function _handleMpvNessage(msg)
+	local trigger_event = nil
+
+	if msg.event == "end-file" or msg.event == "file-loaded" then
+		trigger_event = "UpdateStatusCache"
+	elseif msg.name == "path" or msg.name == "playlist-pos" then
+		trigger_event = "UpdateStatusCache"
+	end
+
+	if trigger_event then
+		vim.schedule(function()
+			vim.api.nvim_exec_autocmds("User", {
+				pattern = trigger_event,
+			})
+		end)
+	end
+end
+
 local function _defineSocket(template)
 	if not template:find("%%") then
 		template = template .. "-%d"
@@ -79,7 +97,9 @@ function Player.new(defaultValues)
 		return nil
 	end
 
-	self.connection = ipc.connect(self.socket, function(line) end)
+	self.connection = ipc.connect(self.socket, function(line)
+		_handleMpvNessage(line)
+	end)
 
 	local conn_ok = vim.wait(1000, function()
 		return self.connection.is_connected
