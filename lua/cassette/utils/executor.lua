@@ -5,11 +5,7 @@ function executor.run(cmd, opts)
 
 	local args = cmd
 	if type(cmd) == "string" then
-		if vim.uv.os_uname().sysname == "Windows_NT" then
-			args = { "cmd.exe", "/c", cmd }
-		else
-			args = { "sh", "-c", cmd }
-		end
+		args = { "sh", "-c", cmd }
 	end
 
 	local handle
