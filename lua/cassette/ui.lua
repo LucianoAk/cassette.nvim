@@ -1,5 +1,7 @@
 local ui = {}
 
+ui.cache = {}
+
 local player = require("cassette.player")
 
 local function _getPlatformIcon(url)
@@ -15,15 +17,14 @@ local function _getPlatformIcon(url)
 end
 
 function ui.getStatusLine()
-	local mediaTitle = player.focus:getTitle()
-	if not mediaTitle or mediaTitle == "" or mediaTitle == vim.NIL then
-		return ""
-	end
+	return string.format("%s Playing: [ %s ]", _getPlatformIcon(ui.cache.path or ""), ui.cache.mediaTitle or "")
+end
 
-	local icon = _getPlatformIcon(player.focus:getPath())
-
-	local result = string.format("%s Playing: [ %s ]", icon, mediaTitle)
-	return result
+function ui.updateCache()
+	ui.cache = {
+		mediaTitle = player.focus:getTitle(),
+		path = player.focus:getPath(),
+	}
 end
 
 return ui
