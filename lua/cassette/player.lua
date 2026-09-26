@@ -1,33 +1,39 @@
 local executor = require("cassette.utils.executor")
+local ipc = require("cassette.utils.ipc")
 
 local Player = {}
 Player.__index = Player
 
 Player.focus = nil
 
-function Player.new(source)
-	local self = setmetatable({}, Player)
-
-	self.source = source
-	self.socket = nil
-
-	Player.focus = self
-
-	return self
-end
-
-local function _start(source, extra_flags)
-	local base_args = {
-		"mpv",
-		"--input-ipc-server=/tmp/mpv-$$-socket",
-	}
-
-	for _, flag in ipairs(extra_flags or {}) do
-		table.insert(base_args, flag)
+local function _defineSocket(template)
+	if not template:find("%%") then
+		template = template .. "-%d"
 	end
 
-	table.insert(base_args, source)
+	return string.format(template, vim.uv.hrtime())
+end
 
+local function _start(self)
+	local base_args = {
+		"mpv",
+		"--input-ipc-server=" .. self.socket,
+		"--idle",
+	}
+
+	if self.volume ~= nil then
+		table.insert(base_args, "--volume=" .. tostring(self.volume))
+	end
+
+	if self.speed ~= nil then
+		table.insert(base_args, "--speed=" .. tostring(self.speed))
+	end
+
+	if self.video == false then
+		table.insert(base_args, "--no-video")
+	end
+
+	table.insert(base_args, self.source)
 	local cmd = table.concat(base_args, " ")
 	local handle = executor.run(cmd, {
 		on_start = function(h)
@@ -46,52 +52,63 @@ local function _start(source, extra_flags)
 	return handle
 end
 
-function Player:startVideo()
-	local pid = _start(self.source).pid
-	self.socket = "/tmp/mpv-" .. pid .. "-socket"
+local function _setupObserver(connection)
+	ipc.send(connection, { "command", "observe_property", 1, "path" })
+	ipc.send(connection, { "command", "observe_property", 2, "playlist-pos" })
+	ipc.send(connection, { "command", "observe_property", 3, "pause" })
+	ipc.send(connection, { "command", "observe_property", 4, "media-title" })
 end
 
-function Player:startMusic()
-	local pid = _start(self.source, { "--no-video" }).pid
-	self.socket = "/tmp/mpv-" .. pid .. "-socket"
-end
+function Player.new(defaultValues)
+	local self = setmetatable({}, Player)
 
-local function _getProperty(socket, property)
-	local cmd_table = { command = { "get_property", property } }
-	local payload = vim.fn.json_encode(cmd_table) .. "\n"
+	self.volume = defaultValues.volume
+	self.speed = defaultValues.speed
+	self.video = defaultValues.video
+	self.source = nil
 
-	local system_args = {}
-	if vim.fn.executable("socat") == 1 then
-		system_args = { "socat", "-", socket }
-	elseif vim.fn.executable("nc") == 1 then
-		system_args = { "nc", "-U", socket }
-	else
-		vim.notify("Neither socat nor nc is available for mpv IPC.", vim.log.levels.ERROR)
+	self.socket = _defineSocket("/tmp/" .. defaultValues.socketName)
+	self.process = _start(self)
+
+	local file_ok = vim.wait(1000, function()
+		return vim.uv.fs_stat(self.socket) ~= nil
+	end, 10)
+
+	if not file_ok then
+		vim.notify("Timed out waiting for MPV socket file: " .. self.socket, vim.log.levels.ERROR)
 		return nil
 	end
 
-	local result = vim.system(system_args, {
-		stdin = payload,
-		text = true,
-	}):wait()
+	self.connection = ipc.connect(self.socket, function(line) end)
 
-	if result.code == 0 and result.stdout ~= "" then
-		local ok, decoded = pcall(vim.fn.json_decode, result.stdout)
-		if ok and decoded and decoded.error == "success" then
-			return decoded.data
-		end
+	local conn_ok = vim.wait(1000, function()
+		return self.connection.is_connected
+	end, 10)
+
+	if not conn_ok then
+		vim.notify("Timed out establishing connection to MPV socket.", vim.log.levels.ERROR)
+		self.connection:close()
+		return nil
 	end
 
-	return nil
+	_setupObserver(self.connection)
+
+	Player.focus = self
+
+	return self
+end
+
+function Player:load(source)
+	self.source = source
+	ipc.send(self.connection, { command = { "loadfile", source } })
 end
 
 function Player:getTitle()
-	local result = _getProperty(self.socket, "media-title")
-	return result
+	return ipc.send(self.connection, { command = { "get_property", "media-title" } })
 end
 
 function Player:getPath()
-	return _getProperty(self.socket, "path")
+	return ipc.send(self.connection, { command = { "get_property", "path" } })
 end
 
 return Player
