@@ -4,7 +4,7 @@ config.defaults = {
 	player = {
 		default_volume = 100,
 		default_speed = 1.0,
-		socket_name_template = "mpv-%d-socket",
+		socket_name_template = "mpv-socket-%d",
 	},
 }
 
