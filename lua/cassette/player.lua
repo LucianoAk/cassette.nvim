@@ -124,11 +124,11 @@ function Player:load(source)
 end
 
 function Player:getTitle()
-	return ipc.send(self.connection, { command = { "get_property", "media-title" } })
+	return ipc.send(self.connection, { "command", "get_property", "media-title" })
 end
 
 function Player:getPath()
-	return ipc.send(self.connection, { command = { "get_property", "path" } })
+	return ipc.send(self.connection, { "command", "get_property", "path" })
 end
 
 return Player
