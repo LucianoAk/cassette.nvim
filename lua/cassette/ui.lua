@@ -1,8 +1,8 @@
 local ui = {}
 
-ui.cache = {}
-
 local player = require("cassette.player")
+
+ui.cache = {}
 
 local function _getPlatformIcon(url)
 	if url:match("youtube%.com") or url:match("youtu%.be") then
