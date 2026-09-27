@@ -65,11 +65,13 @@ end
 
 function ipc.send(connection, cmd_table, timeout)
 	if not connection or not connection.is_connected then
+		vim.notify("MPV IPC Error: Not connected", vim.log.levels.ERROR)
 		return nil, "Not connected"
 	end
 
 	local client = connection._client
 	if not client or client:is_closing() then
+		vim.notify("MPV IPC Error: Client is closing", vim.log.levels.ERROR)
 		return nil, "Client is closing"
 	end
 
@@ -92,6 +94,7 @@ function ipc.send(connection, cmd_table, timeout)
 
 	if not success or timed_out then
 		connection._pending[req_id] = nil
+		vim.notify("MPV IPC Error: Request timed out", vim.log.levels.ERROR)
 		return nil, "Request timed out"
 	end
 
@@ -101,6 +104,7 @@ function ipc.send(connection, cmd_table, timeout)
 	end
 
 	if response.error and response.error ~= "success" then
+		vim.notify("MPV IPC Error: " .. response.error, vim.log.levels.ERROR)
 		return nil, response.error
 	end
 
