@@ -134,6 +134,7 @@ function Player.new(source, defaultValues)
 end
 
 function Player:load(source)
+	self.source = source
 	ipc.send(self.connection, { command = { "loadfile", source } })
 end
 
