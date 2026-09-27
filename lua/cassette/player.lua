@@ -111,9 +111,9 @@ function Player.new(defaultValues)
 		return nil
 	end
 
-	_setupObserver(self.connection)
-
 	Player.focus = self
+
+	_setupObserver(self.connection)
 
 	return self
 end
