@@ -5,9 +5,9 @@ local function _handleMpvNessage(msg)
 	local trigger_event = nil
 
 	if msg.event == "end-file" or msg.event == "file-loaded" then
-		trigger_event = "UpdateStatusCache"
+		trigger_event = "UpdateUICache"
 	elseif msg.name == "path" or msg.name == "playlist-pos" then
-		trigger_event = "UpdateStatusCache"
+		trigger_event = "UpdateUICache"
 	end
 
 	if trigger_event then
