@@ -71,10 +71,10 @@ local function _start(self)
 end
 
 local function _setupObserver(connection)
-	ipc.send(connection, { command = { "observe_property", "path" } })
-	ipc.send(connection, { command = { "observe_property", "playlist-pos" } })
-	ipc.send(connection, { command = { "observe_property", "pause" } })
-	ipc.send(connection, { command = { "observe_property", "media-title" } })
+	ipc.send(connection, { command = { "observe_property", 1, "path" } })
+	ipc.send(connection, { command = { "observe_property", 2, "playlist-pos" } })
+	ipc.send(connection, { command = { "observe_property", 3, "pause" } })
+	ipc.send(connection, { command = { "observe_property", 4, "media-title" } })
 end
 
 function Player.new(defaultValues)
