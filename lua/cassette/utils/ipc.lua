@@ -91,7 +91,7 @@ function ipc.send(conn, cmd_table, timeout)
 	end, 10)
 
 	if not success or timed_out then
-		conn._pending[req_id] = nil -- Clean up dangling request
+		conn._pending[req_id] = nil
 		return nil, "Request timed out"
 	end
 
