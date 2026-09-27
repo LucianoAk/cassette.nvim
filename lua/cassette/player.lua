@@ -89,6 +89,8 @@ local function _setupConnection(socket)
 		connection:close()
 		return nil, "Timed out establishing connection to MPV socket."
 	end
+
+	return connection
 end
 
 local Player = {}
