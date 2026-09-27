@@ -77,7 +77,7 @@ local function _setupObserver(connection)
 	ipc.send(connection, { command = { "observe_property", 4, "media-title" } })
 end
 
-function Player.new(defaultValues)
+function Player.new(source, defaultValues)
 	local self = setmetatable({}, Player)
 
 	self.volume = defaultValues.volume
@@ -113,13 +113,16 @@ function Player.new(defaultValues)
 
 	Player.focus = self
 
+	if source and source ~= "" then
+		self:load(source)
+	end
+
 	_setupObserver(self.connection)
 
 	return self
 end
 
 function Player:load(source)
-	self.source = source
 	ipc.send(self.connection, { command = { "loadfile", source } })
 end
 
