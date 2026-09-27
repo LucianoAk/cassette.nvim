@@ -1,11 +1,6 @@
 local executor = require("cassette.utils.executor")
 local ipc = require("cassette.utils.ipc")
 
-local Player = {}
-Player.__index = Player
-
-Player.focus = nil
-
 local function _handleMpvNessage(msg)
 	local trigger_event = nil
 
@@ -95,6 +90,11 @@ local function _setupConnection(socket)
 		return nil, "Timed out establishing connection to MPV socket."
 	end
 end
+
+local Player = {}
+Player.__index = Player
+
+Player.focus = nil
 
 function Player.new(source, defaultValues)
 	local self = setmetatable({}, Player)
