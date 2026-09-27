@@ -32,7 +32,7 @@ local function _defineSocket(template)
 	return string.format(template, vim.uv.hrtime())
 end
 
-local function _start(self)
+local function _setupProcess(self)
 	local base_args = {
 		"mpv",
 		"--input-ipc-server=" .. self.socket,
@@ -105,7 +105,7 @@ function Player.new(source, defaultValues)
 	self.source = nil
 
 	self.socket = _defineSocket("/tmp/" .. defaultValues.socketName)
-	self.process = _start(self)
+	self.process = _setupProcess(self)
 
 	local file_ok = vim.wait(1000, function()
 		return vim.uv.fs_stat(self.socket) ~= nil
