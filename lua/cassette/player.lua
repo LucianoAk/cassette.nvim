@@ -77,6 +77,25 @@ local function _setupObserver(connection)
 	ipc.send(connection, { command = { "observe_property", 4, "media-title" } })
 end
 
+local function _setupConnection(socket)
+	local connection = ipc.connect(socket, function(line)
+		_handleMpvNessage(line)
+	end)
+
+	if not connection then
+		return nil, "Failed to create connection to MPV socket."
+	end
+
+	local conn_ok = vim.wait(1000, function()
+		return connection and connection.is_connected
+	end, 10)
+
+	if not conn_ok then
+		connection:close()
+		return nil, "Timed out establishing connection to MPV socket."
+	end
+end
+
 function Player.new(source, defaultValues)
 	local self = setmetatable({}, Player)
 
@@ -97,18 +116,10 @@ function Player.new(source, defaultValues)
 		return nil
 	end
 
-	self.connection = ipc.connect(self.socket, function(line)
-		_handleMpvNessage(line)
-	end)
-
-	local conn_ok = vim.wait(1000, function()
-		return self.connection.is_connected
-	end, 10)
-
-	if not conn_ok then
-		vim.notify("Timed out establishing connection to MPV socket.", vim.log.levels.ERROR)
-		self.connection:close()
-		return nil
+	self.connection, error = _setupConnection(self.socket)
+	if error then
+		vim.notify("Error: " .. error, vim.log.levels.ERROR)
+		return
 	end
 
 	Player.focus = self
