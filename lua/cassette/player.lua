@@ -71,10 +71,10 @@ local function _start(self)
 end
 
 local function _setupObserver(connection)
-	ipc.send(connection, { "command", "observe_property", "path" })
-	ipc.send(connection, { "command", "observe_property", "playlist-pos" })
-	ipc.send(connection, { "command", "observe_property", "pause" })
-	ipc.send(connection, { "command", "observe_property", "media-title" })
+	ipc.send(connection, { command = { "observe_property", "path" } })
+	ipc.send(connection, { command = { "observe_property", "playlist-pos" } })
+	ipc.send(connection, { command = { "observe_property", "pause" } })
+	ipc.send(connection, { command = { "observe_property", "media-title" } })
 end
 
 function Player.new(defaultValues)
@@ -124,11 +124,11 @@ function Player:load(source)
 end
 
 function Player:getTitle()
-	return ipc.send(self.connection, { "command", "get_property", "media-title" })
+	return ipc.send(self.connection, { command = { "get_property", "media-title" } })
 end
 
 function Player:getPath()
-	return ipc.send(self.connection, { "command", "get_property", "path" })
+	return ipc.send(self.connection, { command = { "get_property", "path" } })
 end
 
 return Player
