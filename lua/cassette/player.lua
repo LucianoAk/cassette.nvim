@@ -34,11 +34,11 @@ local function _setupProcess(self)
 		"--idle",
 	}
 
-	if self.volume ~= nil then
+	if self.default_volume ~= nil then
 		table.insert(base_args, "--volume=" .. tostring(self.volume))
 	end
 
-	if self.speed ~= nil then
+	if self.default_speed ~= nil then
 		table.insert(base_args, "--speed=" .. tostring(self.speed))
 	end
 
@@ -106,7 +106,7 @@ function Player.new(source, defaultValues)
 	self.video = defaultValues.video
 	self.source = nil
 
-	self.socket = _defineSocket("/tmp/" .. defaultValues.socketName)
+	self.socket = _defineSocket("/tmp/" .. defaultValues.socket_name_template)
 	self.process = _setupProcess(self)
 
 	local file_ok = vim.wait(1000, function()

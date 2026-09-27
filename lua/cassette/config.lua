@@ -2,9 +2,9 @@ local config = {}
 
 config.defaults = {
 	player = {
-		volume = 100,
-		speed = 1.0,
-		socketName = "mpv-%d-socket",
+		default_volume = 100,
+		default_speed = 1.0,
+		socket_name_template = "mpv-%d-socket",
 	},
 }
 
