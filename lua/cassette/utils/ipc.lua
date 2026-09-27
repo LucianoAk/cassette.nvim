@@ -63,22 +63,22 @@ function ipc.connect(socket_path, on_message_cb)
 	return connection
 end
 
-function ipc.send(conn, cmd_table, timeout)
-	if not conn or not conn.is_connected then
+function ipc.send(connection, cmd_table, timeout)
+	if not connection or not connection.is_connected then
 		return nil, "Not connected"
 	end
 
-	local client = conn._client
+	local client = connection._client
 	if not client or client:is_closing() then
 		return nil, "Client is closing"
 	end
 
-	conn._next_id = conn._next_id + 1
-	local req_id = conn._next_id
+	connection._next_id = connection._next_id + 1
+	local req_id = connection._next_id
 	cmd_table.request_id = req_id
 
 	local response = nil
-	conn._pending[req_id] = function(res)
+	connection._pending[req_id] = function(res)
 		response = res
 	end
 
@@ -91,7 +91,7 @@ function ipc.send(conn, cmd_table, timeout)
 	end, 10)
 
 	if not success or timed_out then
-		conn._pending[req_id] = nil
+		connection._pending[req_id] = nil
 		return nil, "Request timed out"
 	end
 
