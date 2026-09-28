@@ -78,13 +78,6 @@ local function _setupProcess(self)
 	return handle
 end
 
-local function _setupObserver(connection)
-	ipc.send(connection, { command = { "observe_property", 1, "path" } })
-	ipc.send(connection, { command = { "observe_property", 2, "playlist-pos" } })
-	ipc.send(connection, { command = { "observe_property", 3, "pause" } })
-	ipc.send(connection, { command = { "observe_property", 4, "media-title" } })
-end
-
 local function _setupConnection(socket)
 	local connection = ipc.connect(socket, function(line)
 		_handleMpvNessage(line)
@@ -141,8 +134,6 @@ function Player.new(source, defaultValues)
 	end
 
 	Player.focus = self
-
-	_setupObserver(self.connection)
 
 	return self
 end
