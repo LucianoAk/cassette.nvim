@@ -116,6 +116,10 @@ function Player.new(source, defaultValues)
 	self.socket = _defineSocket("/tmp/" .. defaultValues.socket_name_template)
 	self.process = _setupProcess(self)
 
+	vim.wait(1000, function()
+		return self.process ~= nil
+	end, 10)
+
 	local file_ok = vim.wait(1000, function()
 		return vim.uv.fs_stat(self.socket) ~= nil
 	end, 10)
