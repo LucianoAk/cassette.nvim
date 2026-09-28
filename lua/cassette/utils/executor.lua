@@ -5,7 +5,10 @@ function executor.run(cmd, opts)
 
 	local args = cmd
 	if type(cmd) == "string" then
-		args = { "sh", "-c", cmd }
+		args = {}
+		for word in cmd:gmatch("%S+") do
+			table.insert(args, word)
+		end
 	end
 
 	local handle
