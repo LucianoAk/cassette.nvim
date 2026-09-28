@@ -32,6 +32,10 @@ function cassette.startMusic(source)
 	end
 end
 
+function cassette.stop()
+	player.focus:stop()
+end
+
 function cassette.getUIStatusLine()
 	return ui.getStatusLine()
 end
