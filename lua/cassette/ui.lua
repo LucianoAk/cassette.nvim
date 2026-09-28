@@ -27,4 +27,11 @@ function ui.updateCache()
 	}
 end
 
+function ui.cleanCache()
+	ui.cache = {
+		mediaTitle = "",
+		path = "",
+	}
+end
+
 return ui
