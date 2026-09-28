@@ -127,7 +127,13 @@ function Player.new(source, defaultValues)
 	end, 10)
 
 	if not socket_ok then
-		vim.notify("Timed out waiting for MPV socket file: " .. self.socket, vim.log.levels.ERROR)
+		vim.notify(
+			string.format(
+				"Timeout while waiting for socket file: %s\nPossible reasons:\n- Process crashed or failed to start\n- Startup took longer than 1000ms\n- Missing parent directory or permissions\n- Stale socket file or working directory mismatch",
+				self.socket
+			),
+			vim.log.levels.ERROR
+		)
 		return nil
 	end
 
