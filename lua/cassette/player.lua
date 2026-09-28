@@ -125,11 +125,11 @@ function Player.new(source, defaultValues)
 		return nil
 	end
 
-	local file_ok = vim.wait(1000, function()
+	local socket_ok = vim.wait(1000, function()
 		return vim.uv.fs_stat(self.socket) ~= nil
 	end, 10)
 
-	if not file_ok then
+	if not socket_ok then
 		vim.notify("Timed out waiting for MPV socket file: " .. self.socket, vim.log.levels.ERROR)
 		return nil
 	end
