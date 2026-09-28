@@ -32,6 +32,10 @@ function cassette.startMusic(source)
 	end
 end
 
+function cassette.load(source)
+	player.focus:load(source)
+end
+
 function cassette.stop()
 	player.focus:stop()
 end
