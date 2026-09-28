@@ -21,12 +21,16 @@ local function _handleMpvNessage(msg)
 	end
 end
 
-local function _defineSocket(template)
+local function _defineSocket(path, template)
 	if not template:find("%%") then
 		template = template .. "-%d"
 	end
 
-	return string.format(template, vim.uv.hrtime())
+	if not path:match("/$") then
+		path = path .. "/"
+	end
+
+	return path .. string.format(template, vim.uv.hrtime())
 end
 
 local function _setupProcess(self)
@@ -115,7 +119,7 @@ function Player.new(source, defaultValues)
 	self.title = nil
 	self.path = nil
 
-	self.socket = _defineSocket("/tmp/" .. defaultValues.socket_name_template)
+	self.socket = _defineSocket(defaultValues.socket_path, defaultValues.socket_name_template)
 	self.process = _setupProcess(self)
 
 	local socket_ok = vim.wait(1000, function()
