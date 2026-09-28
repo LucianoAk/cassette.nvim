@@ -116,9 +116,14 @@ function Player.new(source, defaultValues)
 	self.socket = _defineSocket("/tmp/" .. defaultValues.socket_name_template)
 	self.process = _setupProcess(self)
 
-	vim.wait(1000, function()
+	local process_ok = vim.wait(1000, function()
 		return self.process ~= nil
 	end, 10)
+
+	if not process_ok then
+		vim.notify("Timed out waiting for process to initialize", vim.log.levels.ERROR)
+		return nil
+	end
 
 	local file_ok = vim.wait(1000, function()
 		return vim.uv.fs_stat(self.socket) ~= nil
