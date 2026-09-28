@@ -134,6 +134,7 @@ function Player.new(source, defaultValues)
 			),
 			vim.log.levels.ERROR
 		)
+		self.process:kill("sigterm")
 		return nil
 	end
 
