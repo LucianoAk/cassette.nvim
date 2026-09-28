@@ -1,10 +1,10 @@
 local ui = require("cassette.ui")
 local player = require("cassette.player")
 
-local augroup = vim.api.nvim_create_augroup("CasssetteUICache", { clear = true })
+local ui_cache_group = vim.api.nvim_create_augroup("CasssetteUICache", { clear = true })
 
 vim.api.nvim_create_autocmd("User", {
-	group = augroup,
+	group = ui_cache_group,
 	pattern = "UpdateUICache",
 	callback = function(ev)
 		player.focus:updateMediaFields()
@@ -14,7 +14,7 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 vim.api.nvim_create_autocmd("User", {
-	group = augroup,
+	group = ui_cache_group,
 	pattern = "CleanUICache",
 	callback = function(ev)
 		ui.cleanCache()
