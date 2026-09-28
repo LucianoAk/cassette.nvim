@@ -4,6 +4,7 @@ vim.api.nvim_create_autocmd("User", {
 	group = augroup,
 	pattern = "UpdateUICache",
 	callback = function(ev)
+		require("cassette.player").focus:updateMediaFields()
 		require("cassette.ui").updateCache()
 		vim.cmd.redrawstatus()
 	end,
