@@ -4,7 +4,9 @@ local ipc = require("cassette.utils.ipc")
 local function _handleMpvNessage(msg)
 	local trigger_event = nil
 
-	if msg.event == "end-file" or msg.event == "file-loaded" then
+	if msg.event == "end-file" and msg.reason == "stop" then
+		trigger_event = "CleanUICache"
+	elseif msg.event == "file-loaded" then
 		trigger_event = "UpdateUICache"
 	elseif msg.name == "path" or msg.name == "playlist-pos" then
 		trigger_event = "UpdateUICache"
