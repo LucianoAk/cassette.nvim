@@ -1,28 +1,29 @@
-require("cassette").setup()
+local cassette = require("cassette")
+cassette.setup()
 
 vim.api.nvim_create_user_command("VideoCassetteStart", function(opts)
-	require("cassette").startVideo(opts.args)
+	cassette.startVideo(opts.args)
 end, {
 	nargs = 1,
 })
 
 vim.api.nvim_create_user_command("MusicCassetteStart", function(opts)
-	require("cassette").startMusic(opts.args)
+	cassette.startMusic(opts.args)
 end, {
 	nargs = 1,
 })
 
 vim.api.nvim_create_user_command("GetUIStatusLine", function()
-	local status_text = require("cassette").getUIStatusLine()
+	local status_text = cassette.getUIStatusLine()
 	vim.notify(status_text)
 end, {})
 
 vim.api.nvim_create_user_command("CassetteLoad", function(opts)
-	require("cassette").load(opts.args)
+	cassette.load(opts.args)
 end, {
 	nargs = 1,
 })
 
 vim.api.nvim_create_user_command("CassetteStop", function()
-	require("cassette").stop()
+	cassette.stop()
 end, {})
