@@ -106,6 +106,9 @@ function Player.new(source, defaultValues)
 	self.video = defaultValues.video
 	self.source = nil
 
+	self.title = nil
+	self.path = nil
+
 	self.socket = _defineSocket("/tmp/" .. defaultValues.socket_name_template)
 	self.process = _setupProcess(self)
 
@@ -135,17 +138,22 @@ function Player.new(source, defaultValues)
 	return self
 end
 
+function Player:updateMediaFields()
+	self.title = ipc.send(self.connection, { command = { "get_property", "media-title" } })
+	self.path = ipc.send(self.connection, { command = { "get_property", "path" } })
+end
+
 function Player:load(source)
 	self.source = source
 	ipc.send(self.connection, { command = { "loadfile", source } })
 end
 
 function Player:getTitle()
-	return ipc.send(self.connection, { command = { "get_property", "media-title" } })
+	return self.title
 end
 
 function Player:getPath()
-	return ipc.send(self.connection, { command = { "get_property", "path" } })
+	return self.path
 end
 
 return Player
