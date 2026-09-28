@@ -16,3 +16,7 @@ vim.api.nvim_create_user_command("GetUIStatusLine", function()
 	local status_text = require("cassette").getUIStatusLine()
 	vim.notify(status_text)
 end, {})
+
+vim.api.nvim_create_user_command("CassetteStop", function()
+	require("cassette").stop()
+end, {})
