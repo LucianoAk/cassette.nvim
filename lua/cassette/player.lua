@@ -33,7 +33,6 @@ local function _setupProcess(self)
 	local base_args = {
 		"mpv",
 		"--input-ipc-server=" .. self.socket,
-		"--idle",
 	}
 
 	if self.default_volume ~= nil then
@@ -48,7 +47,10 @@ local function _setupProcess(self)
 		table.insert(base_args, "--no-video")
 	end
 
-	table.insert(base_args, self.source)
+	if self.source and self.source ~= "" then
+		table.insert(base_args, self.source)
+	end
+
 	local cmd = table.concat(base_args, " ")
 	local handle = executor.run(cmd, {
 		on_start = function(h)
@@ -106,7 +108,7 @@ function Player.new(source, defaultValues)
 	self.volume = defaultValues.volume
 	self.speed = defaultValues.speed
 	self.video = defaultValues.video
-	self.source = nil
+	self.source = source
 
 	self.title = nil
 	self.path = nil
@@ -130,10 +132,6 @@ function Player.new(source, defaultValues)
 	end
 
 	Player.focus = self
-
-	if source and source ~= "" then
-		self:load(source)
-	end
 
 	_setupObserver(self.connection)
 
