@@ -30,14 +30,26 @@ function cassette.startMusic(source)
 end
 
 function cassette.load(source)
+	if not player.focus then
+		vim.notify("Operation 'load' cannot be completed because no player is focused", vim.log.levels.WARN)
+		return
+	end
 	player.focus:load(source)
 end
 
 function cassette.stop()
+	if not player.focus then
+		vim.notify("Operation 'stop' cannot be completed because no player is focused", vim.log.levels.WARN)
+		return
+	end
 	player.focus:stop()
 end
 
 function cassette.focus()
+	if not player.running_players or #player.running_players == 0 then
+		vim.notify("Operation 'focus' cannot be completed because there are no running players", vim.log.levels.WARN)
+		return
+	end
 	ui.show_player_picker(player.running_players, function(p)
 		return string.format("▶ Player: %s", p.title or "")
 	end, function(choice)
