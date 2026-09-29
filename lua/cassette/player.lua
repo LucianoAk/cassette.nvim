@@ -7,6 +7,7 @@ Player.__index = Player
 Player.focus = nil
 
 local opts = {}
+Player.running_players = {}
 
 function Player.setup(player_configs)
 	opts = player_configs
@@ -44,6 +45,15 @@ local function _defineSocket(path, template)
 	return path .. string.format(template, vim.uv.hrtime())
 end
 
+local function _remove_player(target_player)
+	for index, player in ipairs(Player.running_players) do
+		if player == target_player then
+			player.process:kill("sigterm")
+			table.remove(Player.running_players, index)
+		end
+	end
+end
+
 local function _setupProcess(self)
 	local base_args = {
 		"mpv",
@@ -72,6 +82,7 @@ local function _setupProcess(self)
 			vim.notify("Starting player with PID: " .. h.pid, vim.log.levels.INFO)
 		end,
 		on_exit = function(result, h)
+			_remove_player(self)
 			if result.code == 0 then
 				vim.notify("Stopped player PID: " .. h.pid, vim.log.levels.INFO)
 			else
@@ -151,6 +162,8 @@ function Player.new(video, source)
 		vim.notify("Error: " .. error, vim.log.levels.ERROR)
 		return
 	end
+
+	table.insert(Player.running_players, self)
 
 	Player.focus = self
 
