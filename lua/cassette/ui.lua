@@ -1,7 +1,5 @@
 local ui = {}
 
-local player = require("cassette.player")
-
 ui.cache = {}
 
 local function _getPlatformIcon(url)
@@ -20,10 +18,10 @@ function ui.getStatusLine()
 	return string.format("%s Playing: [ %s ]", _getPlatformIcon(ui.cache.path or ""), ui.cache.mediaTitle or "")
 end
 
-function ui.updateCache()
+function ui.updateCache(title, path)
 	ui.cache = {
-		mediaTitle = player.focus:getTitle(),
-		path = player.focus:getPath(),
+		mediaTitle = title,
+		path = path,
 	}
 end
 
@@ -42,7 +40,9 @@ function ui.show_player_picker(list, formatter, on_select)
 		if on_select then
 			on_select(choice)
 		end
-		ui.updateCache()
+		if choice and choice.title and choice.path then
+			ui.updateCache(choice.title, choice.path)
+		end
 	end)
 end
 

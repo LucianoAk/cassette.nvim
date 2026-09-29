@@ -14,7 +14,7 @@ function autocmd.setup(autocmd_configs)
 		pattern = "UpdateUICache",
 		callback = function(ev)
 			player.focus:updateMediaFields()
-			ui.updateCache()
+			ui.updateCache(player.focus.title, player.focus.path)
 			vim.cmd.redrawstatus()
 		end,
 	})
