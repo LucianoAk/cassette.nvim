@@ -2,8 +2,11 @@ local ui = require("cassette.ui")
 local player = require("cassette.player")
 
 local autocmd = {}
+local opts = {}
 
-function autocmd.setup()
+function autocmd.setup(autocmd_configs)
+	opts = autocmd_configs or {}
+
 	local ui_cache_group = vim.api.nvim_create_augroup("CasssetteUICache", { clear = true })
 
 	vim.api.nvim_create_autocmd("User", {
