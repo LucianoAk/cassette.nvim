@@ -183,6 +183,12 @@ function Player:stop()
 	return ipc.send(self.connection, { command = { "stop" } })
 end
 
+function Player.change_focus(player)
+	Player.focus = player
+	vim.notify("Focusing on player: " .. (player.title or ""))
+	Player.focus:updateMediaFields()
+end
+
 function Player:updateMediaFields()
 	self.title = ipc.send(self.connection, { command = { "get_property", "media-title" } })
 	self.path = ipc.send(self.connection, { command = { "get_property", "path" } })
