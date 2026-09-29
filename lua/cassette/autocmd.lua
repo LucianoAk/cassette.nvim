@@ -36,6 +36,19 @@ function autocmd.setup(autocmd_configs)
 			vim.cmd.redrawstatus()
 		end,
 	})
+
+	local augroup = vim.api.nvim_create_augroup("PluginCleanup", { clear = true })
+
+	vim.api.nvim_create_autocmd("VimLeavePre", {
+		group = augroup,
+		callback = function()
+			if not opts.persist or opts.persist == false then
+				for _, p in ipairs(player.running_players) do
+					p:stop()
+				end
+			end
+		end,
+	})
 end
 
 return autocmd
