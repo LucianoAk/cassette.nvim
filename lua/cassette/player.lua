@@ -170,22 +170,9 @@ function Player.new(video, source)
 	return self
 end
 
-function Player:updateMediaFields()
-	self.title = ipc.send(self.connection, { command = { "get_property", "media-title" } })
-	self.path = ipc.send(self.connection, { command = { "get_property", "path" } })
-end
-
 function Player:load(source)
 	self.source = source
 	ipc.send(self.connection, { command = { "loadfile", source } })
-end
-
-function Player:getTitle()
-	return self.title
-end
-
-function Player:getPath()
-	return self.path
 end
 
 function Player:stop()
@@ -194,6 +181,19 @@ function Player:stop()
 	ipc.send(self.connection, { command = { "unobserve_property", 3 } })
 	ipc.send(self.connection, { command = { "unobserve_property", 4 } })
 	return ipc.send(self.connection, { command = { "stop" } })
+end
+
+function Player:updateMediaFields()
+	self.title = ipc.send(self.connection, { command = { "get_property", "media-title" } })
+	self.path = ipc.send(self.connection, { command = { "get_property", "path" } })
+end
+
+function Player:getTitle()
+	return self.title
+end
+
+function Player:getPath()
+	return self.path
 end
 
 return Player
