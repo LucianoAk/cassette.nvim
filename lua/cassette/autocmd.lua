@@ -24,15 +24,6 @@ function autocmd.setup(autocmd_configs)
 		pattern = "CleanUICache",
 		callback = function(ev)
 			ui.cleanCache()
-
-			local ok = vim.wait(1000, function()
-				return ui.cache.mediaTitle == "" and ui.cache.path == ""
-			end, 100)
-
-			if not ok then
-				vim.notify("Timeout", vim.log.levels.ERROR)
-			end
-
 			vim.cmd.redrawstatus()
 		end,
 	})
