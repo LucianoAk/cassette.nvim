@@ -37,6 +37,14 @@ function cassette.stop()
 	player.focus:stop()
 end
 
+function cassette.focus()
+	ui.show_player_picker(player.running_players, function(p)
+		return string.format("▶ Player: %s", p.title or "")
+	end, function(choice)
+		player.change_focus(choice)
+	end)
+end
+
 function cassette.getUIStatusLine()
 	return ui.getStatusLine()
 end
