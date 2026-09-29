@@ -3,11 +3,12 @@ local cassette = {}
 local player = require("cassette.player")
 local ui = require("cassette.ui")
 local config = require("cassette.config")
-require("cassette.autocmd").setup()
+local autocmd = require("cassette.autocmd")
 
 function cassette.setup(user_opts)
 	config.setup(user_opts)
 	player.setup(config.options.player)
+	autocmd.setup({ config.options.player.persist })
 end
 
 function cassette.startVideo(source)
