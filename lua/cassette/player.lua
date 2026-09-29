@@ -117,9 +117,9 @@ end
 function Player.new(video, source)
 	local self = setmetatable({}, Player)
 
-	self.volume = opts.volume
-	self.speed = opts.speed
-	self.video = opts.video
+	self.volume = opts.default_volume
+	self.speed = opts.default_speed
+	self.video = video
 	self.source = source
 
 	self.title = nil
