@@ -90,6 +90,19 @@ local function _setupProcess(self)
 		return nil
 	end
 
+	local socket_ok = vim.wait(1000, function()
+		return vim.uv.fs_stat(self.socket) ~= nil
+	end, 10)
+
+	if not socket_ok then
+		handle:kill("sigterm")
+		return nil,
+			string.format(
+				"Timeout while waiting for socket file: %s\nPossible reasons:\n- Process crashed or failed to start\n- Startup took longer than 1000ms\n- Missing parent directory or permissions\n- Stale socket file or working directory mismatch",
+				self.socket
+			)
+	end
+
 	return handle
 end
 
@@ -126,22 +139,11 @@ function Player.new(video, source)
 	self.path = nil
 
 	self.socket = _defineSocket(opts.socket_path, opts.socket_name_template)
-	self.process = _setupProcess(self)
+	self.process, error = _setupProcess(self)
 
-	local socket_ok = vim.wait(1000, function()
-		return vim.uv.fs_stat(self.socket) ~= nil
-	end, 10)
-
-	if not socket_ok then
-		vim.notify(
-			string.format(
-				"Timeout while waiting for socket file: %s\nPossible reasons:\n- Process crashed or failed to start\n- Startup took longer than 1000ms\n- Missing parent directory or permissions\n- Stale socket file or working directory mismatch",
-				self.socket
-			),
-			vim.log.levels.ERROR
-		)
-		self.process:kill("sigterm")
-		return nil
+	if error then
+		vim.notify("Error: " .. error, vim.log.levels.ERROR)
+		return
 	end
 
 	self.connection, error = _setupConnection(self.socket)
