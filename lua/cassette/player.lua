@@ -1,6 +1,17 @@
 local executor = require("cassette.utils.executor")
 local ipc = require("cassette.utils.ipc")
 
+local Player = {}
+Player.__index = Player
+
+Player.focus = nil
+
+local opts = {}
+
+function Player.setup(player_configs)
+	opts = player_configs
+end
+
 local function _handleMpvNessage(msg)
 	local trigger_event = nil
 
@@ -103,23 +114,18 @@ local function _setupConnection(socket)
 	return connection
 end
 
-local Player = {}
-Player.__index = Player
-
-Player.focus = nil
-
-function Player.new(source, defaultValues)
+function Player.new(video, source)
 	local self = setmetatable({}, Player)
 
-	self.volume = defaultValues.volume
-	self.speed = defaultValues.speed
-	self.video = defaultValues.video
+	self.volume = opts.volume
+	self.speed = opts.speed
+	self.video = opts.video
 	self.source = source
 
 	self.title = nil
 	self.path = nil
 
-	self.socket = _defineSocket(defaultValues.socket_path, defaultValues.socket_name_template)
+	self.socket = _defineSocket(opts.socket_path, opts.socket_name_template)
 	self.process = _setupProcess(self)
 
 	local socket_ok = vim.wait(1000, function()

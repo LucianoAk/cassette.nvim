@@ -7,12 +7,11 @@ require("cassette.autocmd")
 
 function cassette.setup(user_opts)
 	config.setup(user_opts)
+	player.setup(config.options.player)
 end
 
 function cassette.startVideo(source)
-	local player_opts = vim.deepcopy(config.options.player)
-	player_opts.video = true
-	local videoPlayer = player.new(source, player_opts)
+	local videoPlayer = player.new(true, source)
 
 	if not videoPlayer then
 		vim.notify("Failed to start player: MPV player could not be initialized.", vim.log.levels.ERROR)
@@ -21,10 +20,7 @@ function cassette.startVideo(source)
 end
 
 function cassette.startMusic(source)
-	local player_opts = vim.deepcopy(config.options.player)
-	player_opts.video = false
-
-	local musicPlayer = player.new(source, player_opts)
+	local musicPlayer = player.new(false, source)
 
 	if not musicPlayer then
 		vim.notify("Failed to start player: MPV player could not be initialized.", vim.log.levels.ERROR)
