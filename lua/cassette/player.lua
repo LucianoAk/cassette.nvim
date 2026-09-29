@@ -50,11 +50,11 @@ local function _setupProcess(self)
 		"--input-ipc-server=" .. self.socket,
 	}
 
-	if self.default_volume ~= nil then
+	if self.volume ~= nil then
 		table.insert(base_args, "--volume=" .. tostring(self.volume))
 	end
 
-	if self.default_speed ~= nil then
+	if self.speed ~= nil then
 		table.insert(base_args, "--speed=" .. tostring(self.speed))
 	end
 
