@@ -27,3 +27,7 @@ end, {
 vim.api.nvim_create_user_command("CassetteStop", function()
 	cassette.stop()
 end, {})
+
+vim.api.nvim_create_user_command("CassetteFocus", function()
+	cassette.focus()
+end, {})
