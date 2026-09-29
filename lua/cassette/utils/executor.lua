@@ -1,5 +1,7 @@
 local executor = {}
 
+executor.running_processes = {}
+
 function executor.run(cmd, opts)
 	opts = opts or {}
 
@@ -23,6 +25,8 @@ function executor.run(cmd, opts)
 	if opts.on_start and handle then
 		opts.on_start(handle)
 	end
+
+	table.insert(executor.running_processes, handle)
 
 	return handle
 end
