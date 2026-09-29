@@ -25,6 +25,7 @@ function executor.run(cmd, opts)
 	local handle
 	handle = vim.system(args, opts.system_opts or {}, function(result)
 		if opts.on_exit then
+			_remove_process(handle)
 			vim.schedule(function()
 				opts.on_exit(result, handle)
 			end)
