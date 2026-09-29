@@ -48,7 +48,6 @@ end
 local function _remove_player(target_player)
 	for index, player in ipairs(Player.running_players) do
 		if player == target_player then
-			player.process:kill("sigterm")
 			table.remove(Player.running_players, index)
 		end
 	end
