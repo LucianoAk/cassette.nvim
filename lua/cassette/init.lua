@@ -42,6 +42,7 @@ function cassette.focus()
 		return string.format("▶ Player: %s", p.title or "")
 	end, function(choice)
 		player.change_focus(choice)
+		ui.updateCache(choice.title, choice.path)
 	end)
 end
 

@@ -40,9 +40,6 @@ function ui.show_player_picker(list, formatter, on_select)
 		if on_select then
 			on_select(choice)
 		end
-		if choice and choice.title and choice.path then
-			ui.updateCache(choice.title, choice.path)
-		end
 	end)
 end
 
