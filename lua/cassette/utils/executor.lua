@@ -2,6 +2,15 @@ local executor = {}
 
 executor.running_processes = {}
 
+local function _remove_process(target_handle)
+	for i, handle in ipairs(executor.running_processes) do
+		if handle == target_handle then
+			table.remove(executor.running_processes, i)
+			break
+		end
+	end
+end
+
 function executor.run(cmd, opts)
 	opts = opts or {}
 
