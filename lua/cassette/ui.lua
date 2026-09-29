@@ -4,13 +4,13 @@ ui.cache = {}
 
 local function _getPlatformIcon(url)
 	if url:match("youtube%.com") or url:match("youtu%.be") then
-		return "󰗃 "
+		return "󰗃"
 	elseif url:match("twitch%.tv") then
-		return "󰕃 "
+		return "󰕃"
 	elseif url:match("spotify%.com") then
-		return "󰓇 "
+		return "󰓇"
 	else
-		return "▶ "
+		return "▶"
 	end
 end
 
