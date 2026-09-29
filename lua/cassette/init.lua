@@ -8,7 +8,7 @@ local autocmd = require("cassette.autocmd")
 function cassette.setup(user_opts)
 	config.setup(user_opts)
 	player.setup(config.options.player)
-	autocmd.setup({ config.options.player.persist })
+	autocmd.setup({ persist = config.options.player.persist })
 end
 
 function cassette.startVideo(source)
