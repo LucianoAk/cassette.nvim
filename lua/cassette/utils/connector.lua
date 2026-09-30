@@ -108,7 +108,7 @@ function connector.send(connection, cmd_table, timeout)
 		return nil, response.error
 	end
 
-	return response.data
+	return response
 end
 
 return connector

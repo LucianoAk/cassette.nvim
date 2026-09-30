@@ -201,8 +201,8 @@ function Player.change_focus(player)
 end
 
 function Player:updateMediaFields()
-	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } })
-	self.path = connector.send(self.connection, { command = { "get_property", "path" } })
+	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
+	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
 end
 
 return Player
