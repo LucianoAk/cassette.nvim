@@ -111,4 +111,61 @@ function connector.send(connection, cmd_table, timeout)
 	return response
 end
 
+function connector.ping(socket_path, timeout)
+	timeout = timeout or 1000
+	local client = vim.uv.new_pipe(false)
+	if not client then
+		return false, "Failed to create pipe"
+	end
+
+	local connected = false
+	local response_data = nil
+
+	client:connect(socket_path, function(err)
+		if err then
+			if not client:is_closing() then
+				client:close()
+			end
+			return
+		end
+
+		connected = true
+
+		client:read_start(function(read_err, chunk)
+			if read_err or not chunk then
+				if not client:is_closing() then
+					client:close()
+				end
+				return
+			end
+			response_data = chunk
+		end)
+
+		local payload = vim.json.encode({ command = { "get_version" }, request_id = 0 }) .. "\n"
+		client:write(payload)
+	end)
+
+	local success, timed_out = vim.wait(timeout, function()
+		return response_data ~= nil or (not connected and client:is_closing() == true)
+	end, 10)
+
+	if not client:is_closing() then
+		client:close()
+	end
+
+	if not success or timed_out then
+		return false, "Connection or request timed out"
+	end
+
+	if not response_data then
+		return false, "No response received from socket"
+	end
+
+	local ok, decoded = pcall(vim.json.decode, response_data)
+	if ok then
+		return true, decoded
+	end
+
+	return true, response_data
+end
 return connector
