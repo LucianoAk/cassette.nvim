@@ -28,10 +28,10 @@ function autocmd.setup(autocmd_configs)
 		end,
 	})
 
-	local augroup = vim.api.nvim_create_augroup("PluginCleanup", { clear = true })
+	local plugin_cleanup_group = vim.api.nvim_create_augroup("CassetteCleanup", { clear = true })
 
 	vim.api.nvim_create_autocmd("VimLeavePre", {
-		group = augroup,
+		group = plugin_cleanup_group,
 		callback = function()
 			if not opts.persist or opts.persist == false then
 				for _, p in ipairs(player.running_players) do
