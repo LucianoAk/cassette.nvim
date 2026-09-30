@@ -199,12 +199,4 @@ function Player:updateMediaFields()
 	self.path = connector.send(self.connection, { command = { "get_property", "path" } })
 end
 
-function Player:getTitle()
-	return self.title
-end
-
-function Player:getPath()
-	return self.path
-end
-
 return Player
