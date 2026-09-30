@@ -1,5 +1,5 @@
 local executor = require("cassette.utils.executor")
-local ipc = require("cassette.utils.ipc")
+local connector = require("cassette.utils.connector")
 local identifier = require("cassette.utils.identifier")
 
 local Player = {}
@@ -127,7 +127,7 @@ local function _setupProcess(self)
 end
 
 local function _setupConnection(socket)
-	local connection = ipc.connect(socket, function(line)
+	local connection = connector.connect(socket, function(line)
 		_handleMpvNessage(line)
 	end)
 
@@ -181,11 +181,11 @@ end
 
 function Player:load(source)
 	self.source = source
-	ipc.send(self.connection, { command = { "loadfile", source } })
+	connector.send(self.connection, { command = { "loadfile", source } })
 end
 
 function Player:stop()
-	return ipc.send(self.connection, { command = { "stop" } })
+	return connector.send(self.connection, { command = { "stop" } })
 end
 
 function Player.change_focus(player)
@@ -195,8 +195,8 @@ function Player.change_focus(player)
 end
 
 function Player:updateMediaFields()
-	self.title = ipc.send(self.connection, { command = { "get_property", "media-title" } })
-	self.path = ipc.send(self.connection, { command = { "get_property", "path" } })
+	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } })
+	self.path = connector.send(self.connection, { command = { "get_property", "path" } })
 end
 
 function Player:getTitle()

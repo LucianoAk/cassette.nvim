@@ -1,6 +1,6 @@
-local ipc = {}
+local connector = {}
 
-function ipc.connect(socket_path, on_message_cb)
+function connector.connect(socket_path, on_message_cb)
 	local client = vim.uv.new_pipe(false)
 	if not client then
 		return nil
@@ -63,7 +63,7 @@ function ipc.connect(socket_path, on_message_cb)
 	return connection
 end
 
-function ipc.send(connection, cmd_table, timeout)
+function connector.send(connection, cmd_table, timeout)
 	if not connection or not connection.is_connected then
 		vim.notify("MPV IPC Error: Not connected", vim.log.levels.ERROR)
 		return nil, "Not connected"
@@ -111,4 +111,4 @@ function ipc.send(connection, cmd_table, timeout)
 	return response.data
 end
 
-return ipc
+return connector
