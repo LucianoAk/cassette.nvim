@@ -60,15 +60,6 @@ local function _defineSocket(path, template)
 	return path .. file
 end
 
-local function _remove_player(target_player)
-	for index, player in ipairs(Player.running_players) do
-		if player == target_player then
-			os.remove(player.socket)
-			table.remove(Player.running_players, index)
-		end
-	end
-end
-
 local function _setupProcess(self)
 	local base_args = {
 		"mpv",
@@ -97,7 +88,6 @@ local function _setupProcess(self)
 			vim.notify("Starting player with PID: " .. h.pid, vim.log.levels.INFO)
 		end,
 		on_exit = function(result, h)
-			_remove_player(self)
 			if result.code == 0 then
 				vim.notify("Stopped player PID: " .. h.pid, vim.log.levels.INFO)
 			else
@@ -191,7 +181,19 @@ function Player:load(source)
 end
 
 function Player:stop()
-	return connector.send(self.connection, { command = { "stop" } })
+	local response, error = connector.send(self.connection, { command = { "stop" } })
+	if error then
+		vim.notify(error, vim.log.levels.ERROR)
+	end
+
+	for index, player in ipairs(Player.running_players) do
+		if player == self then
+			os.remove(player.socket)
+			table.remove(Player.running_players, index)
+		end
+	end
+
+	return response
 end
 
 function Player.change_focus(player)
