@@ -1,5 +1,6 @@
 local executor = require("cassette.utils.executor")
 local ipc = require("cassette.utils.ipc")
+local identifier = require("cassette.utils.identifier")
 
 local Player = {}
 Player.__index = Player
@@ -34,15 +35,27 @@ local function _handleMpvNessage(msg)
 end
 
 local function _defineSocket(path, template)
-	if not template:find("%%") then
-		template = template .. "-%d"
-	end
-
 	if not path:match("/$") then
 		path = path .. "/"
 	end
 
-	return path .. string.format(template, vim.uv.hrtime())
+	local file
+	if template:find("%uuid", 1, true) then
+		vim.notify("found uuid")
+		file = string.gsub(template, "%%uuid", identifier.uuid())
+	elseif template:find("%nanoid", 1, true) then
+		vim.notify("found nanoid")
+		file = string.gsub(template, "%%nanoid", identifier.nanoid())
+	elseif template:find("%hrtime", 1, true) then
+		vim.notify("found hrtime")
+		file = string.gsub(template, "%%hrtime", identifier.hrtime())
+	else
+		vim.notify("not found")
+		template = template .. "-%hrtime"
+		file = string.gsub(template, "%%hrtime", identifier.hrtime())
+	end
+
+	return path .. file
 end
 
 local function _remove_player(target_player)
