@@ -10,6 +10,12 @@ Player.focus = nil
 local opts = {}
 Player.running_players = {}
 
+-- TODO:
+-- add seek functionality
+-- add skip to next or previous in playlist
+-- add toggling playback method that also updates the ui so it can make the icon 󰏤, 󰏥, 󰏧 or 󰏦
+-- add function to, on start, check if any mpv is open via the sockets by sending a request
+-- add support for streamlink
 function Player.setup(player_configs)
 	opts = player_configs
 end

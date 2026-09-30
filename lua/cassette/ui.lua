@@ -14,6 +14,8 @@ local function _getPlatformIcon(url)
 	end
 end
 
+-- TODO:
+-- create a ui configuration to define the structure of the status line using a sections table
 function ui.getStatusLine()
 	return string.format("%s Playing: [ %s ]", _getPlatformIcon(ui.cache.path or ""), ui.cache.mediaTitle or "")
 end
