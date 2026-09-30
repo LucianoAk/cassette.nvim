@@ -41,16 +41,12 @@ local function _defineSocket(path, template)
 
 	local file
 	if template:find("%uuid", 1, true) then
-		vim.notify("found uuid")
 		file = string.gsub(template, "%%uuid", identifier.uuid())
 	elseif template:find("%nanoid", 1, true) then
-		vim.notify("found nanoid")
 		file = string.gsub(template, "%%nanoid", identifier.nanoid())
 	elseif template:find("%hrtime", 1, true) then
-		vim.notify("found hrtime")
 		file = string.gsub(template, "%%hrtime", identifier.hrtime())
 	else
-		vim.notify("not found")
 		template = template .. "-%hrtime"
 		file = string.gsub(template, "%%hrtime", identifier.hrtime())
 	end
