@@ -176,10 +176,6 @@ function Player:load(source)
 end
 
 function Player:stop()
-	ipc.send(self.connection, { command = { "unobserve_property", 1 } })
-	ipc.send(self.connection, { command = { "unobserve_property", 2 } })
-	ipc.send(self.connection, { command = { "unobserve_property", 3 } })
-	ipc.send(self.connection, { command = { "unobserve_property", 4 } })
 	return ipc.send(self.connection, { command = { "stop" } })
 end
 
