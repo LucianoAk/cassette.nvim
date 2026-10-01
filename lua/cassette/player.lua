@@ -250,6 +250,30 @@ function Player.search_active_sockets()
 	return active_sockets
 end
 
+local function _watch_pid(pid, on_exit_callback)
+	local timer = vim.uv.new_timer()
+
+	if not timer then
+		return nil, "Could not restore connection with sockets processes timer could not be initialized"
+	end
+
+	timer:start(
+		0,
+		1000,
+		vim.schedule_wrap(function()
+			local success = vim.uv.kill(pid, 0)
+
+			if success ~= 0 then
+				timer:stop()
+				timer:close()
+				if on_exit_callback then
+					on_exit_callback(pid)
+				end
+			end
+		end)
+	)
+end
+
 function Player.reconnect_sockets(active_sockets)
 	for _, socket in ipairs(active_sockets) do
 		local connection, err = _setupConnection(socket)
@@ -272,6 +296,10 @@ function Player.reconnect_sockets(active_sockets)
 				path = get_prop("path"),
 				process = { pid = get_prop("pid") },
 			}, Player)
+
+			_watch_pid(self.process.pid, function(pid)
+				vim.notify("Stopped player PID: " .. pid, vim.log.levels.INFO)
+			end)
 
 			table.insert(Player.running_players, self)
 		end
