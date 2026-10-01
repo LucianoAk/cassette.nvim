@@ -9,6 +9,14 @@ function cassette.setup(user_opts)
 	config.setup(user_opts)
 	player.setup(config.options.player)
 	autocmd.setup({ persist = config.options.player.persist })
+
+	if config.options.player.persist or config.options.player.persist == true then
+		vim.schedule(function()
+			vim.api.nvim_exec_autocmds("User", {
+				pattern = "ReconnectSockets",
+			})
+		end)
+	end
 end
 
 function cassette.startVideo(source)
