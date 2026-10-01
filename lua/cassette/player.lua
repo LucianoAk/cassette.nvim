@@ -87,6 +87,12 @@ local function _setupProcess(self)
 			vim.notify("Starting player with PID: " .. h.pid, vim.log.levels.INFO)
 		end,
 		on_exit = function(result, h)
+			for index, player in ipairs(Player.running_players) do
+				if player == self then
+					os.remove(player.socket)
+					table.remove(Player.running_players, index)
+				end
+			end
 			if result.code == 0 then
 				vim.notify("Stopped player PID: " .. h.pid, vim.log.levels.INFO)
 			else
@@ -183,13 +189,6 @@ function Player:stop()
 	local response, error = connector.send(self.connection, { command = { "stop" } })
 	if error then
 		vim.notify(error, vim.log.levels.ERROR)
-	end
-
-	for index, player in ipairs(Player.running_players) do
-		if player == self then
-			os.remove(player.socket)
-			table.remove(Player.running_players, index)
-		end
 	end
 
 	return response
@@ -298,6 +297,12 @@ function Player.reconnect_sockets(active_sockets)
 			}, Player)
 
 			_watch_pid(self.process.pid, function(pid)
+				for index, player in ipairs(Player.running_players) do
+					if player == self then
+						os.remove(player.socket)
+						table.remove(Player.running_players, index)
+					end
+				end
 				vim.notify("Stopped player PID: " .. pid, vim.log.levels.INFO)
 			end)
 
