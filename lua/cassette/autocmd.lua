@@ -40,6 +40,29 @@ function autocmd.setup(autocmd_configs)
 			end
 		end,
 	})
+
+	local plugin_initialization_group = vim.api.nvim_create_augroup("CassetteInit", { clear = true })
+
+	vim.api.nvim_create_autocmd("User", {
+		group = plugin_initialization_group,
+		pattern = "ReconnectSockets",
+		callback = function()
+			local active_sockets = player.search_active_sockets()
+
+			if not active_sockets or #active_sockets == 0 then
+				return
+			end
+
+			local formatted_list = {}
+			for _, socket in ipairs(active_sockets) do
+				table.insert(formatted_list, "- " .. socket)
+			end
+
+			ui.ask_reconnect_socket(function()
+				player.reconnect_sockets(active_sockets)
+			end)
+		end,
+	})
 end
 
 return autocmd
