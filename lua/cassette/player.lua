@@ -202,6 +202,50 @@ function Player.change_focus(player)
 	Player.focus:updateMediaFields()
 end
 
+function Player.search_active_sockets()
+	local path = opts.socket_path
+	local template = opts.socket_name_template
+
+	if not path:match("/$") then
+		path = path .. "/"
+	end
+
+	if
+		not template:find("%uuid", 1, true)
+		and not template:find("%nanoid", 1, true)
+		and not template:find("%hrtime", 1, true)
+	then
+		template = template .. "-%hrtime"
+	end
+
+	local placeholder = "___WILD_FLAG___"
+	local modified = template:gsub("%%uuid", placeholder):gsub("%%nanoid", placeholder):gsub("%%hrtime", placeholder)
+	local pattern = "^" .. vim.pesc(modified):gsub(placeholder, ".+") .. "$"
+
+	local handle = vim.loop.fs_scandir(path)
+	if not handle then
+		return {}
+	end
+
+	local active_sockets = {}
+	while true do
+		local name, type = vim.loop.fs_scandir_next(handle)
+		if not name then
+			break
+		end
+
+		if (type == "socket") and name:match(pattern) then
+			local socket_path = path .. name
+			local success = connector.ping(socket_path, 1000)
+			if success then
+				table.insert(active_sockets, socket_path)
+			end
+		end
+	end
+
+	return active_sockets
+end
+
 function Player:updateMediaFields()
 	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
 	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
