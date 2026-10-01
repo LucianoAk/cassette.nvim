@@ -246,6 +246,34 @@ function Player.search_active_sockets()
 	return active_sockets
 end
 
+function Player.reconnect_sockets(active_sockets)
+	for _, socket in ipairs(active_sockets) do
+		local connection, err = _setupConnection(socket)
+		if err then
+			vim.notify("Error: " .. err, vim.log.levels.ERROR)
+		else
+			local function get_prop(name)
+				local res = connector.send(connection, { command = { "get_property", name } })
+				return res and res.data or nil
+			end
+
+			local self = setmetatable({
+				socket = socket,
+				connection = connection,
+				volume = get_prop("volume"),
+				speed = get_prop("speed"),
+				video = not not get_prop("video"),
+				source = get_prop("path"),
+				title = get_prop("media-title"),
+				path = get_prop("path"),
+				process = { pid = get_prop("pid") },
+			}, Player)
+
+			table.insert(Player.running_players, self)
+		end
+	end
+end
+
 function Player:updateMediaFields()
 	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
 	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
