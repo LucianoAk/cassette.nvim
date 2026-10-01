@@ -11,7 +11,6 @@ local opts = {}
 Player.running_players = {}
 
 -- TODO:
--- add seek functionality
 -- add skip to next or previous in playlist
 -- add toggling playback method that also updates the ui so it can make the icon 󰏤, 󰏥, 󰏧 or 󰏦
 -- add support for streamlink
