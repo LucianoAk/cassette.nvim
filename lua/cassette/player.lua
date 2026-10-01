@@ -278,9 +278,4 @@ function Player.reconnect_sockets(active_sockets)
 	end
 end
 
-function Player:updateMediaFields()
-	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
-	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
-end
-
 return Player
