@@ -201,6 +201,11 @@ function Player.change_focus(player)
 	Player.focus:updateMediaFields()
 end
 
+function Player:updateMediaFields()
+	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
+	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
+end
+
 function Player.search_active_sockets()
 	local path = opts.socket_path
 	local template = opts.socket_name_template
