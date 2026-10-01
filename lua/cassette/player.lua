@@ -194,6 +194,10 @@ function Player:stop()
 	return response
 end
 
+function Player:seek(time)
+	connector.send(self.connection, { command = { "seek", time } })
+end
+
 function Player.change_focus(player)
 	Player.focus = player
 	vim.notify("Focusing on player: " .. (player.title or ""))
