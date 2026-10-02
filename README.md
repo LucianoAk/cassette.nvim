@@ -8,7 +8,7 @@
 
 </div>
 
-A media player for neovim that allows for playing video or music from local files or 
+A media player for Neovim that allows for playing video or music from local files or URLs
 
 ## Requirements
 - mpv
