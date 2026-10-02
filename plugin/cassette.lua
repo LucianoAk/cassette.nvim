@@ -37,6 +37,14 @@ end, {
 	nargs = 1,
 })
 
+vim.api.nvim_create_user_command("CassetteNext", function()
+	cassette.next()
+end, {})
+
+vim.api.nvim_create_user_command("CassettePrev", function()
+	cassette.previous()
+end, {})
+
 vim.api.nvim_create_user_command("CassetteFocus", function()
 	cassette.focus()
 end, {})
