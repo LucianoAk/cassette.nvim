@@ -210,8 +210,8 @@ end
 function Player:updateMediaFields()
 	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
 	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
-	self.playlist_pos = connector.send(self.connection, { command = { "get_property", "playlist-pos" } })
-	self.playlist_count = connector.send(self.connection, { command = { "get_property", "playlist-count" } })
+	self.playlist_pos = connector.send(self.connection, { command = { "get_property", "playlist-pos" } }).data + 1
+	self.playlist_count = connector.send(self.connection, { command = { "get_property", "playlist-count" } }).data
 end
 
 function Player.search_active_sockets()
