@@ -48,7 +48,7 @@ end
 
 function ui.ask_reconnect_socket(on_select)
 	vim.ui.select({ "Yes", "No" }, {
-		prompt = "Found active sockets, do you want to reconnect?",
+		prompt = "Cassette found active player sockets, do you want to reconnect?",
 	}, function(choice)
 		if choice == "Yes" then
 			on_select()
