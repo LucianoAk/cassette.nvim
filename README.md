@@ -8,4 +8,23 @@
 
 </div>
 
-A media player for neovim that allows for playing video or music
+A media player for neovim that allows for playing video or music from local files or 
+
+## Requirements
+- mpv
+- yt-dlp
+
+## Configurations
+```json
+{
+	player = {
+		default_volume = 100,
+		default_speed = 1.0,
+		socket_path = "/tmp/",
+		socket_name_template = "mpv-socket-%nanoid",
+	},
+	session = {
+		persist = true,
+	},
+}
+```
