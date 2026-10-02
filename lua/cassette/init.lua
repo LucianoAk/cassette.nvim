@@ -57,6 +57,22 @@ function cassette.seek(time)
 	player.focus:seek(time)
 end
 
+function cassette.next()
+	if player.focus.playlist_pos >= player.focus.playlist_count then
+		vim.notify("End of playlist reached", vim.log.levels.WARN)
+		return
+	end
+	player.focus:next()
+end
+
+function cassette.previous()
+	if player.focus.playlist_pos <= 1 then
+		vim.notify("Beginning of playlist reached", vim.log.levels.WARN)
+		return
+	end
+	player.focus:previous()
+end
+
 function cassette.focus()
 	if not player.running_players or #player.running_players == 0 then
 		vim.notify("Operation 'focus' cannot be completed because there are no running players", vim.log.levels.WARN)
