@@ -201,6 +201,14 @@ function Player:seek(time)
 	connector.send(self.connection, { command = { "seek", time } })
 end
 
+function Player:next()
+	connector.send(self.connection, { command = { "playlist-next" } })
+end
+
+function Player:previous()
+	connector.send(self.connection, { command = { "playlist-prev" } })
+end
+
 function Player.change_focus(player)
 	Player.focus = player
 	vim.notify("Focusing on player: " .. (player.title or ""))
