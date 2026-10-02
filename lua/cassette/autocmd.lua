@@ -53,11 +53,6 @@ function autocmd.setup(autocmd_configs)
 				return
 			end
 
-			local formatted_list = {}
-			for _, socket in ipairs(active_sockets) do
-				table.insert(formatted_list, "- " .. socket)
-			end
-
 			ui.ask_reconnect_socket(function()
 				player.reconnect_sockets(active_sockets)
 			end)
