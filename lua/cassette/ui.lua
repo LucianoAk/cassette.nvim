@@ -18,6 +18,15 @@ end
 -- create a ui configuration to define the structure of the status line using a sections table
 -- add duration section by taking the time-pos property, adding to it every second and syncing every 30 second
 function ui.getStatusLine()
+	if ui.cache.playlist_count and ui.cache.playlist_count > 1 then
+		return string.format(
+			"%s Playing: [ %s ] %d/%d",
+			_getPlatformIcon(ui.cache.path or ""),
+			ui.cache.mediaTitle or "",
+			ui.cache.playlist_pos or 0,
+			ui.cache.playlist_count or 0
+		)
+	end
 	return string.format("%s Playing: [ %s ]", _getPlatformIcon(ui.cache.path or ""), ui.cache.mediaTitle or "")
 end
 
