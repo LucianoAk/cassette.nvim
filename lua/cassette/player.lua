@@ -302,6 +302,8 @@ function Player.reconnect_sockets(active_sockets)
 				source = get_prop("path"),
 				title = get_prop("media-title"),
 				path = get_prop("path"),
+				playlist_pos = get_prop("playlist-pos") + 1,
+				playlist_count = get_prop("playlist-count"),
 				process = { pid = get_prop("pid") },
 			}, Player)
 
