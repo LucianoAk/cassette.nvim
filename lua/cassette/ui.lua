@@ -21,10 +21,12 @@ function ui.getStatusLine()
 	return string.format("%s Playing: [ %s ]", _getPlatformIcon(ui.cache.path or ""), ui.cache.mediaTitle or "")
 end
 
-function ui.updateCache(title, path)
+function ui.updateCache(title, path, playlist_pos, playlist_count)
 	ui.cache = {
 		mediaTitle = title,
 		path = path,
+		playlist_pos = playlist_pos,
+		playlist_count = playlist_count,
 	}
 end
 
@@ -32,6 +34,8 @@ function ui.cleanCache()
 	ui.cache = {
 		mediaTitle = "",
 		path = "",
+		playlist_pos = 0,
+		playlist_count = 0,
 	}
 end
 
