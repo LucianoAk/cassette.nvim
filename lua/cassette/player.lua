@@ -13,6 +13,8 @@ Player.running_players = {}
 -- TODO:
 -- add toggling playback method that also updates the ui so it can make the icon 󰏤, 󰏥, 󰏧 or 󰏦
 -- add support for streamlink (add extractor module)
+-- add set audio functionality
+-- add playlist-play-index
 -- detect and save plataform in Player fields
 -- move most of the functionalities from reconnect_sockets to connector
 function Player.setup(player_configs)
