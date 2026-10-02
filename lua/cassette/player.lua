@@ -159,6 +159,8 @@ function Player.new(video, source)
 
 	self.title = nil
 	self.path = nil
+	self.playlist_pos = nil
+	self.playlist_count = nil
 
 	self.socket = _defineSocket(opts.socket_path, opts.socket_name_template)
 	self.process, error = _setupProcess(self)
@@ -208,6 +210,8 @@ end
 function Player:updateMediaFields()
 	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
 	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
+	self.playlist_pos = connector.send(self.connection, { command = { "get_property", "playlist-pos" } })
+	self.playlist_count = connector.send(self.connection, { command = { "get_property", "playlist-count" } })
 end
 
 function Player.search_active_sockets()
