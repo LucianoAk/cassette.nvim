@@ -5,12 +5,14 @@ vim.api.nvim_create_user_command("VideoCassetteStart", function(opts)
 	cassette.startVideo(opts.args)
 end, {
 	nargs = 1,
+	complete = "file",
 })
 
 vim.api.nvim_create_user_command("MusicCassetteStart", function(opts)
 	cassette.startMusic(opts.args)
 end, {
 	nargs = 1,
+	complete = "file",
 })
 
 vim.api.nvim_create_user_command("GetUIStatusLine", function()
