@@ -6,6 +6,8 @@ config.defaults = {
 		default_speed = 1.0,
 		socket_path = "/tmp/",
 		socket_name_template = "mpv-socket-%nanoid",
+	},
+	session = {
 		persist = true,
 	},
 }

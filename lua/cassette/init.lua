@@ -8,9 +8,9 @@ local autocmd = require("cassette.autocmd")
 function cassette.setup(user_opts)
 	config.setup(user_opts)
 	player.setup(config.options.player)
-	autocmd.setup({ persist = config.options.player.persist })
+	autocmd.setup({ persist = config.options.session.persist })
 
-	if config.options.player.persist or config.options.player.persist == true then
+	if config.options.session.persist or config.options.session.persist == true then
 		vim.schedule(function()
 			vim.api.nvim_exec_autocmds("User", {
 				pattern = "ReconnectSockets",
