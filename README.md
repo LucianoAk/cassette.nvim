@@ -21,10 +21,10 @@ A media player for Neovim that allows for playing video or music from local file
 		default_volume = 100,
 		default_speed = 1.0,
 		socket_path = "/tmp/",
-		socket_name_template = "mpv-socket-%nanoid",
+		socket_name_template = "mpv-socket-%nanoid"
 	},
 	session = {
-		persist = true,
-	},
+		persist = true
+	}
 }
 ```
