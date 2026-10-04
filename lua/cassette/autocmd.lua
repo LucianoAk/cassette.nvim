@@ -13,13 +13,17 @@ function autocmd.setup(autocmd_configs)
 		group = ui_cache_group,
 		pattern = "UpdateUICache",
 		callback = function(ev)
-			player.focus:updateMediaFields()
-			ui.updateCache(
-				player.focus.title,
-				player.focus.path,
-				player.focus.playlist_pos,
-				player.focus.playlist_count
-			)
+			if player.focus then
+				player.focus:updateMediaFields()
+				ui.updateCache(
+					player.focus.title,
+					player.focus.path,
+					player.focus.playlist_pos,
+					player.focus.playlist_count
+				)
+			else
+				ui.cleanCache()
+			end
 			vim.cmd.redrawstatus()
 		end,
 	})
