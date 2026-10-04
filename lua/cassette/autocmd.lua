@@ -59,11 +59,59 @@ function autocmd.setup(autocmd_configs)
 				return
 			end
 
-			ui.ask_reconnect_socket("Cassette found active player sockets, do you want to reconnect?", function()
+			if opts.reconnect_mode == "auto-reconnect" then
 				for _, socket in ipairs(active_sockets) do
-					player.reconnect_sockets(socket)
+					player.reconnect_socket(socket)
 				end
-			end)
+			elseif opts.reconnect_mode == "ask-all" then
+				ui.ask_reconnect_socket(
+					"Cassette found active player sockets, do you want to reconnect?",
+					function(reconnect)
+						if reconnect then
+							for _, socket in ipairs(active_sockets) do
+								player.reconnect_socket(socket)
+							end
+						end
+					end
+				)
+			elseif opts.reconnect_mode == "ask-each" then
+				local index = 1
+				local total = #active_sockets
+
+				local function process_next()
+					if index > total then
+						return
+					end
+
+					local current_index = index
+					local socket = active_sockets[index]
+					index = index + 1
+
+					ui.ask_reconnect_socket(
+						string.format(
+							"Cassette found active socket '%s' (%d/%d), do you want to reconnect?",
+							socket,
+							current_index,
+							total
+						),
+						function(reconnect)
+							if reconnect then
+								player.reconnect_socket(socket)
+								vim.notify(vim.inspect(player.running_players))
+							end
+							process_next()
+						end
+					)
+				end
+
+				process_next()
+			else
+				vim.notify(
+					string.format("Invalid configuration reconnect_mode: '%s'", opts.reconnect_mode),
+					vim.log.levels.ERROR
+				)
+				return
+			end
 		end,
 	})
 end

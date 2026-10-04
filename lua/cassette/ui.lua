@@ -63,9 +63,7 @@ function ui.ask_reconnect_socket(prompt, on_select)
 	vim.ui.select({ "Yes", "No" }, {
 		prompt = prompt,
 	}, function(choice)
-		if choice == "Yes" then
-			on_select()
-		end
+		on_select(choice == "Yes")
 	end)
 end
 
