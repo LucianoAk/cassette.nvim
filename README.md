@@ -25,7 +25,7 @@ A media player for Neovim that allows for playing video or music from local file
 	},
 	session = {
 		persist = true,
-		reconnect_mode = "auto-reconnect", // 'auto-reconnect', 'ask-each', 'ask-all'
+		reconnect_mode = "auto-reconnect", -- 'auto-reconnect', 'ask-each', 'ask-all'
 	}
 }
 ```
