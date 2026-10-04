@@ -24,7 +24,8 @@ A media player for Neovim that allows for playing video or music from local file
 		socket_name_template = "mpv-socket-%nanoid"
 	},
 	session = {
-		persist = true
+		persist = true,
+		reconnect_mode = "auto-reconnect" // 'auto-reconnect', 'ask-each', 'ask-all'
 	}
 }
 ```
