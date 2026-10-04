@@ -10,7 +10,7 @@ function cassette.setup(user_opts)
 	player.setup(config.options.player)
 	autocmd.setup(config.options.session)
 
-	if config.options.session.persist or config.options.session.persist == true then
+	if config.options.session.persist and config.options.session.persist == true then
 		vim.schedule(function()
 			vim.api.nvim_exec_autocmds("User", {
 				pattern = "ReconnectSockets",
