@@ -8,7 +8,7 @@ local autocmd = require("cassette.autocmd")
 function cassette.setup(user_opts)
 	config.setup(user_opts)
 	player.setup(config.options.player)
-	autocmd.setup({ persist = config.options.session.persist })
+	autocmd.setup(config.options.session)
 
 	if config.options.session.persist or config.options.session.persist == true then
 		vim.schedule(function()
