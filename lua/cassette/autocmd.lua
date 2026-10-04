@@ -59,8 +59,10 @@ function autocmd.setup(autocmd_configs)
 				return
 			end
 
-			ui.ask_reconnect_socket(function()
-				player.reconnect_sockets(active_sockets)
+			ui.ask_reconnect_socket("Cassette found active player sockets, do you want to reconnect?", function()
+				for _, socket in ipairs(active_sockets) do
+					player.reconnect_sockets(socket)
+				end
 			end)
 		end,
 	})
