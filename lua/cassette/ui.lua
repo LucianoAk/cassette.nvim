@@ -59,9 +59,9 @@ function ui.show_player_picker(list, formatter, on_select)
 	end)
 end
 
-function ui.ask_reconnect_socket(on_select)
+function ui.ask_reconnect_socket(prompt, on_select)
 	vim.ui.select({ "Yes", "No" }, {
-		prompt = "Cassette found active player sockets, do you want to reconnect?",
+		prompt = prompt,
 	}, function(choice)
 		if choice == "Yes" then
 			on_select()
