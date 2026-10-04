@@ -15,17 +15,17 @@ A media player for Neovim that allows for playing video or music from local file
 - yt-dlp
 
 ## Configurations
-```json
+```lua
 {
 	player = {
 		default_volume = 100,
 		default_speed = 1.0,
 		socket_path = "/tmp/",
-		socket_name_template = "mpv-socket-%nanoid"
+		socket_name_template = "mpv-socket-%nanoid",
 	},
 	session = {
 		persist = true,
-		reconnect_mode = "auto-reconnect" // 'auto-reconnect', 'ask-each', 'ask-all'
+		reconnect_mode = "auto-reconnect", // 'auto-reconnect', 'ask-each', 'ask-all'
 	}
 }
 ```
