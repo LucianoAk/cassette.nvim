@@ -291,43 +291,41 @@ local function _watch_pid(pid, on_exit_callback)
 	)
 end
 
-function Player.reconnect_sockets(active_sockets)
-	for _, socket in ipairs(active_sockets) do
-		local connection, err = _setupConnection(socket)
-		if err then
-			vim.notify("Error: " .. err, vim.log.levels.ERROR)
-		else
-			local function get_prop(name)
-				local res = connector.send(connection, { command = { "get_property", name } })
-				return res and res.data or nil
-			end
-
-			local self = setmetatable({
-				socket = socket,
-				connection = connection,
-				volume = get_prop("volume"),
-				speed = get_prop("speed"),
-				video = not not get_prop("video"),
-				source = get_prop("path"),
-				title = get_prop("media-title"),
-				path = get_prop("path"),
-				playlist_pos = get_prop("playlist-pos") + 1,
-				playlist_count = get_prop("playlist-count"),
-				process = { pid = get_prop("pid") },
-			}, Player)
-
-			_watch_pid(self.process.pid, function(pid)
-				for index, player in ipairs(Player.running_players) do
-					if player == self then
-						os.remove(player.socket)
-						table.remove(Player.running_players, index)
-					end
-				end
-				vim.notify("Stopped player PID: " .. pid, vim.log.levels.INFO)
-			end)
-
-			table.insert(Player.running_players, self)
+function Player.reconnect_socket(socket)
+	local connection, err = _setupConnection(socket)
+	if err then
+		vim.notify("Error: " .. err, vim.log.levels.ERROR)
+	else
+		local function get_prop(name)
+			local res = connector.send(connection, { command = { "get_property", name } })
+			return res and res.data or nil
 		end
+
+		local self = setmetatable({
+			socket = socket,
+			connection = connection,
+			volume = get_prop("volume"),
+			speed = get_prop("speed"),
+			video = not not get_prop("video"),
+			source = get_prop("path"),
+			title = get_prop("media-title"),
+			path = get_prop("path"),
+			playlist_pos = get_prop("playlist-pos") + 1,
+			playlist_count = get_prop("playlist-count"),
+			process = { pid = get_prop("pid") },
+		}, Player)
+
+		_watch_pid(self.process.pid, function(pid)
+			for index, player in ipairs(Player.running_players) do
+				if player == self then
+					os.remove(player.socket)
+					table.remove(Player.running_players, index)
+				end
+			end
+			vim.notify("Stopped player PID: " .. pid, vim.log.levels.INFO)
+		end)
+
+		table.insert(Player.running_players, self)
 	end
 end
 
