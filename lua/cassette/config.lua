@@ -9,6 +9,7 @@ config.defaults = {
 	},
 	session = {
 		persist = true,
+		reconnect_mode = "auto-reconnect",
 	},
 }
 
