@@ -16,7 +16,6 @@ Player.running_players = {}
 -- add set audio functionality
 -- add playlist-play-index
 -- detect and save plataform in Player fields
--- move most of the functionalities from reconnect_sockets to connector
 function Player.setup(player_configs)
 	opts = player_configs
 end
@@ -267,30 +266,6 @@ function Player.search_active_sockets()
 	return active_sockets
 end
 
-local function _watch_pid(pid, on_exit_callback)
-	local timer = vim.uv.new_timer()
-
-	if not timer then
-		return nil, "Could not restore connection with sockets processes timer could not be initialized"
-	end
-
-	timer:start(
-		0,
-		1000,
-		vim.schedule_wrap(function()
-			local success = vim.uv.kill(pid, 0)
-
-			if success ~= 0 then
-				timer:stop()
-				timer:close()
-				if on_exit_callback then
-					on_exit_callback(pid)
-				end
-			end
-		end)
-	)
-end
-
 function Player.reconnect_socket(socket)
 	local connection, err = _setupConnection(socket)
 	if err then
@@ -315,7 +290,7 @@ function Player.reconnect_socket(socket)
 			process = { pid = get_prop("pid") },
 		}, Player)
 
-		_watch_pid(self.process.pid, function(pid)
+		executor.watch_pid(self.process.pid, function(pid)
 			for index, player in ipairs(Player.running_players) do
 				if player == self then
 					os.remove(player.socket)

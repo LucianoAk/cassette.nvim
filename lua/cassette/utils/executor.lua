@@ -27,4 +27,28 @@ function executor.run(cmd, opts)
 	return handle
 end
 
+function executor.watch_pid(pid, on_exit)
+	local timer = vim.uv.new_timer()
+
+	if not timer then
+		return nil, "Could not restore connection with sockets processes timer could not be initialized"
+	end
+
+	timer:start(
+		0,
+		1000,
+		vim.schedule_wrap(function()
+			local success = vim.uv.kill(pid, 0)
+
+			if success ~= 0 then
+				timer:stop()
+				timer:close()
+				if on_exit then
+					on_exit(pid)
+				end
+			end
+		end)
+	)
+end
+
 return executor
