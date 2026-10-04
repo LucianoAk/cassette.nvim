@@ -52,7 +52,6 @@ function autocmd.setup(autocmd_configs)
 
 	local plugin_initialization_group = vim.api.nvim_create_augroup("CassetteInit", { clear = true })
 
-	-- TODO: add configuration for reconnect to rather do ask for each, ask for all, auto-reconnect and no reconnect
 	vim.api.nvim_create_autocmd("User", {
 		group = plugin_initialization_group,
 		pattern = "ReconnectSockets",
