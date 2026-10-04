@@ -17,6 +17,8 @@ end
 -- TODO:
 -- create a ui configuration to define the structure of the status line using a sections table
 -- add duration section by taking the time-pos property, adding to it every second and syncing every 30 second
+-- add configuration for ui status line where if false it doesn't update status line
+-- add configuration for ui status line where if false the status line dissapears when no player in foucs
 function ui.getStatusLine()
 	if ui.cache.playlist_count and ui.cache.playlist_count > 1 then
 		return string.format(
