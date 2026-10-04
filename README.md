@@ -1,6 +1,6 @@
 <div align="center">
 
-  # cassette.nvim
+  # 📼 cassette.nvim
 
   [![Status](https://img.shields.io/badge/status-in_development-yellow)](https://github.com/LucianoAk/cassette.nvim/commits/main)
   ![GitHub last commit](https://img.shields.io/github/last-commit/LucianoAk/cassette.nvim)
