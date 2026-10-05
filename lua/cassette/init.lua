@@ -75,11 +75,6 @@ end
 
 function cassette.toggle_playback()
 	player.focus:toggle_playback()
-	if player.focus.pause then
-		vim.notify("Paused: " .. player.focus.source)
-	else
-		vim.notify("Unpaused: " .. player.focus.source)
-	end
 end
 
 function cassette.focus()

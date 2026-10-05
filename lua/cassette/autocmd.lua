@@ -37,6 +37,18 @@ function autocmd.setup(autocmd_configs)
 		end,
 	})
 
+	local player_status_group = vim.api.nvim_create_augroup("CassettePlayerStatus", { clear = true })
+
+	vim.api.nvim_create_autocmd("User", {
+		group = player_status_group,
+		pattern = "UpdatePlayerStatus",
+		callback = function()
+			if player.focus then
+				player.focus:sync_status()
+			end
+		end,
+	})
+
 	local plugin_cleanup_group = vim.api.nvim_create_augroup("CassetteCleanup", { clear = true })
 
 	vim.api.nvim_create_autocmd("VimLeavePre", {

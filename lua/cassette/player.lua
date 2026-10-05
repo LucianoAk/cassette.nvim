@@ -23,12 +23,15 @@ end
 local function _handleMpvNessage(msg)
 	local trigger_event = nil
 
+	vim.notify(vim.inspect(msg))
 	if msg.event == "end-file" then
 		trigger_event = "CleanUICache"
 	elseif msg.event == "file-loaded" then
 		trigger_event = "UpdateUICache"
-	elseif msg.name == "path" or msg.name == "playlist-pos" or msg.name == "pause" then
+	elseif msg.name == "path" or msg.name == "playlist-pos" then
 		trigger_event = "UpdateUICache"
+	elseif msg.name == "pause" then
+		trigger_event = "UpdatePlayerStatus"
 	end
 
 	if trigger_event then
@@ -231,6 +234,9 @@ function Player:updateMediaFields()
 	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
 	self.playlist_pos = connector.send(self.connection, { command = { "get_property", "playlist-pos" } }).data + 1
 	self.playlist_count = connector.send(self.connection, { command = { "get_property", "playlist-count" } }).data
+end
+
+function Player:sync_status()
 	self.pause = connector.send(self.connection, { command = { "get_property", "pause" } }).data
 end
 
