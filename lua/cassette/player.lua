@@ -11,11 +11,13 @@ local opts = {}
 Player.running_players = {}
 
 -- TODO:
--- add toggling playback method that also updates the ui so it can make the icon 󰏤, 󰏥, 󰏧 or 󰏦
 -- add support for streamlink (add extractor module)
 -- add set audio functionality
 -- add playlist-play-index
 -- detect and save plataform in Player fields
+-- re-add pause and unpause notification, but somewhere that notifies even if its toggled outiside neovim
+-- unify notification into a single place (maybe init)
+-- maybe: add notification configuration, that allows to turn on and off classes of notifications. e.g. start_player = true, stop_player = true, toggle_playback = false
 function Player.setup(player_configs)
 	opts = player_configs
 end
