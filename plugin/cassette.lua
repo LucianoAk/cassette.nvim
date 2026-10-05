@@ -45,6 +45,10 @@ vim.api.nvim_create_user_command("CassettePrev", function()
 	cassette.previous()
 end, {})
 
+vim.api.nvim_create_user_command("CassetteTogglePlayback", function()
+	cassette.toggle_playback()
+end, {})
+
 vim.api.nvim_create_user_command("CassetteFocus", function()
 	cassette.focus()
 end, {})
