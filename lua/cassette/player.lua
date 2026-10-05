@@ -27,7 +27,7 @@ local function _handleMpvNessage(msg)
 		trigger_event = "CleanUICache"
 	elseif msg.event == "file-loaded" then
 		trigger_event = "UpdateUICache"
-	elseif msg.name == "path" or msg.name == "playlist-pos" then
+	elseif msg.name == "path" or msg.name == "playlist-pos" or msg.name == "pause" then
 		trigger_event = "UpdateUICache"
 	end
 
@@ -58,6 +58,10 @@ local function _defineSocket(path, template)
 	end
 
 	return path .. file
+end
+
+local function _setupObservers(connection)
+	connector.send(connection, { command = { "observe_property", 1, "pause" } })
 end
 
 local function _setupProcess(self)
@@ -176,6 +180,8 @@ function Player.new(video, source)
 		vim.notify("Error: " .. error, vim.log.levels.ERROR)
 		return
 	end
+
+	_setupObservers(self.connection)
 
 	table.insert(Player.running_players, self)
 
@@ -309,6 +315,7 @@ function Player.reconnect_socket(socket)
 			vim.notify("Stopped player PID: " .. pid, vim.log.levels.INFO)
 		end)
 
+		_setupObservers(self.connection)
 		table.insert(Player.running_players, self)
 	end
 end
