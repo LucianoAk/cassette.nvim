@@ -217,10 +217,7 @@ function Player:previous()
 end
 
 function Player:toggle_playback()
-	local _, error = connector.send(self.connection, { command = { "cycle", "pause" } })
-	if not error then
-		self.pause = not self.pause
-	end
+	connector.send(self.connection, { command = { "cycle", "pause" } })
 end
 
 function Player.change_focus(player)
