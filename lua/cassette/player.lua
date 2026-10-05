@@ -25,7 +25,6 @@ end
 local function _handleMpvNessage(msg)
 	local trigger_event = nil
 
-	vim.notify(vim.inspect(msg))
 	if msg.event == "end-file" then
 		trigger_event = "CleanUICache"
 	elseif msg.event == "file-loaded" then
