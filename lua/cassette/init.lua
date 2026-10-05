@@ -73,6 +73,15 @@ function cassette.previous()
 	player.focus:previous()
 end
 
+function cassette.toggle_playback()
+	player.focus:toggle_playback()
+	if player.focus.pause then
+		vim.notify("Paused: " .. player.focus.source)
+	else
+		vim.notify("Unpaused: " .. player.focus.source)
+	end
+end
+
 function cassette.focus()
 	if not player.running_players or #player.running_players == 0 then
 		vim.notify("Operation 'focus' cannot be completed because there are no running players", vim.log.levels.WARN)
