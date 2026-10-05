@@ -161,6 +161,7 @@ function Player.new(video, source)
 	self.path = nil
 	self.playlist_pos = nil
 	self.playlist_count = nil
+	self.pause = nil
 
 	self.socket = _defineSocket(opts.socket_path, opts.socket_name_template)
 	self.process, error = _setupProcess(self)
@@ -207,6 +208,13 @@ end
 
 function Player:previous()
 	connector.send(self.connection, { command = { "playlist-prev" } })
+end
+
+function Player:toggle_playback()
+	local _, error = connector.send(self.connection, { command = { "cycle", "pause" } })
+	if not error then
+		self.pause = not self.pause
+	end
 end
 
 function Player.change_focus(player)
@@ -287,6 +295,7 @@ function Player.reconnect_socket(socket)
 			path = get_prop("path"),
 			playlist_pos = get_prop("playlist-pos") + 1,
 			playlist_count = get_prop("playlist-count"),
+			pause = not not get_prop("pause"),
 			process = { pid = get_prop("pid") },
 		}, Player)
 
