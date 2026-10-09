@@ -1,4 +1,8 @@
+local Logger = require("cassette.utils.logger")
+
 local executor = {}
+
+local MODULE_ORIGIN = "Executor"
 
 function executor.run(cmd, opts)
 	opts = opts or {}
@@ -31,7 +35,7 @@ function executor.watch_pid(pid, on_exit)
 	local timer = vim.uv.new_timer()
 
 	if not timer then
-		return nil, "Could not restore connection with sockets processes timer could not be initialized"
+		return nil, Logger.build_err(MODULE_ORIGIN, "socket processes timer could not be initialized")
 	end
 
 	timer:start(
