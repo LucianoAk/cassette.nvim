@@ -127,6 +127,34 @@ function PlayerManager.toggle_playback()
 	player.pause = not player.pause
 end
 
+function PlayerManager.sync()
+	if not PlayerManager.focus then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'sync' request, no player is being focused")
+		return
+	end
+	local player = PlayerManager.focus
+
+	local function get_prop(name)
+		local res, err = player.connection:send({ command = { "get_property", name } })
+
+		if err then
+			Logger.warn(MODULE_ORIGIN, "could not complete 'sync' request to player, cause:\n" .. err)
+			return nil
+		end
+
+		return res and res.data or nil
+	end
+
+	player.path = get_prop("path") or player.path
+	player.title = get_prop("media-title") or player.title
+	player.video = not not get_prop("video") or player.video
+	player.volume = get_prop("volume") or player.volume
+	player.speed = get_prop("speed") or player.speed
+	player.pause = not not get_prop("pause") or player.pause
+	player.playlist_pos = get_prop("playlist-pos") or player.playlist_pos
+	player.playlist_count = get_prop("playlist-count") or player.playlist_count
+end
+
 -- TODO:
 -- sync()
 --
