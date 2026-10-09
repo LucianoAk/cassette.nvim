@@ -48,11 +48,7 @@ function PlayerManager.load(path)
 		return
 	end
 end
--- function Player:load(source)
--- 	self.source = source
--- 	connector.send(self.connection, { command = { "loadfile", source } })
--- end
---
+
 -- function Player:stop()
 -- 	local response, error = connector.send(self.connection, { command = { "stop" } })
 -- 	if error then
