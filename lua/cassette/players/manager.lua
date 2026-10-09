@@ -64,6 +64,20 @@ function PlayerManager.stop()
 	end
 end
 
+function PlayerManager.seek(time)
+	if not PlayerManager.focus then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request, no player is being focused")
+		return
+	end
+	local player = PlayerManager.focus
+	local _, err = player.connection.send({ command = { "seek", time } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
+		return
+	end
+end
+
 -- TODO:
 -- seek()
 -- next()
@@ -72,15 +86,6 @@ end
 -- sync()
 --
 -- based on:
---
--- function Player:stop()
--- 	local response, error = connector.send(self.connection, { command = { "stop" } })
--- 	if error then
--- 		vim.notify(error, vim.log.levels.ERROR)
--- 	end
---
--- 	return response
--- end
 --
 -- function Player:seek(time)
 -- 	connector.send(self.connection, { command = { "seek", time } })
