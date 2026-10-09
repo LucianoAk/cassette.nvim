@@ -111,6 +111,22 @@ function PlayerManager.previous()
 	player.playlist_pos = player.playlist_pos - 1
 end
 
+function PlayerManager.toggle_playback()
+	if not PlayerManager.focus then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'toggle_playback' request, no player is being focused")
+		return
+	end
+	local player = PlayerManager.focus
+	local _, err = player.connection.send({ command = { "cycle", "pause" } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'toggle_playback' request to player, cause:\n" .. err)
+		return
+	end
+
+	player.pause = not player.pause
+end
+
 -- TODO:
 -- toggle_playback()
 -- sync()
