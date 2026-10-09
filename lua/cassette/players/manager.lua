@@ -43,7 +43,7 @@ function PlayerManager.load(path)
 		return
 	end
 	local player = PlayerManager.focus
-	local _, err = player.connection.send({ command = { "loadfile", path } })
+	local _, err = player.connection:send({ command = { "loadfile", path } })
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'load' request to player, cause:\n" .. err)
@@ -57,7 +57,7 @@ function PlayerManager.stop()
 		return
 	end
 	local player = PlayerManager.focus
-	local _, err = player.connection.send({ command = { "stop" } })
+	local _, err = player.connection:send({ command = { "stop" } })
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'stop' request to player, cause:\n" .. err)
@@ -71,7 +71,7 @@ function PlayerManager.seek(time)
 		return
 	end
 	local player = PlayerManager.focus
-	local _, err = player.connection.send({ command = { "seek", time } })
+	local _, err = player.connection:send({ command = { "seek", time } })
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
@@ -85,7 +85,7 @@ function PlayerManager.next()
 		return
 	end
 	local player = PlayerManager.focus
-	local _, err = player.connection.send({ command = { "playlist-next" } })
+	local _, err = player.connection:send({ command = { "playlist-next" } })
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
@@ -101,7 +101,7 @@ function PlayerManager.previous()
 		return
 	end
 	local player = PlayerManager.focus
-	local _, err = player.connection.send({ command = { "playlist-prev" } })
+	local _, err = player.connection:send({ command = { "playlist-prev" } })
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'previous' request to player, cause:\n" .. err)
@@ -117,7 +117,7 @@ function PlayerManager.toggle_playback()
 		return
 	end
 	local player = PlayerManager.focus
-	local _, err = player.connection.send({ command = { "cycle", "pause" } })
+	local _, err = player.connection:send({ command = { "cycle", "pause" } })
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'toggle_playback' request to player, cause:\n" .. err)
