@@ -128,14 +128,9 @@ function PlayerManager.toggle_playback()
 end
 
 -- TODO:
--- toggle_playback()
 -- sync()
 --
 -- based on:
---
--- function Player:toggle_playback()
--- 	connector.send(self.connection, { command = { "cycle", "pause" } })
--- end
 --
 -- function Player:updateMediaFields()
 -- 	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
