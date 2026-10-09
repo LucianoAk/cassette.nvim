@@ -95,6 +95,22 @@ function PlayerManager.next()
 	player.playlist_pos = player.playlist_pos + 1
 end
 
+function PlayerManager.previous()
+	if not PlayerManager.focus then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'previous' request, no player is being focused")
+		return
+	end
+	local player = PlayerManager.focus
+	local _, err = player.connection.send({ command = { "playlist-prev" } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'previous' request to player, cause:\n" .. err)
+		return
+	end
+
+	player.playlist_pos = player.playlist_pos - 1
+end
+
 -- TODO:
 -- previous()
 -- toggle_playback()
