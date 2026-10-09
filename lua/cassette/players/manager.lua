@@ -112,15 +112,10 @@ function PlayerManager.previous()
 end
 
 -- TODO:
--- previous()
 -- toggle_playback()
 -- sync()
 --
 -- based on:
---
--- function Player:previous()
--- 	connector.send(self.connection, { command = { "playlist-prev" } })
--- end
 --
 -- function Player:toggle_playback()
 -- 	connector.send(self.connection, { command = { "cycle", "pause" } })
