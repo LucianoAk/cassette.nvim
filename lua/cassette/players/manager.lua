@@ -39,7 +39,7 @@ end
 function PlayerManager.load(path)
 	if not PlayerManager.focus then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'load' request, no player is being focused")
-    return
+		return
 	end
 	local player = PlayerManager.focus
 	local _, err = player.connection.send({ command = { "loadfile", path } })
