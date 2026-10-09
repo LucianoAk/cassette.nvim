@@ -50,6 +50,20 @@ function PlayerManager.load(path)
 	end
 end
 
+function PlayerManager.stop()
+	if not PlayerManager.focus then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'stop' request, no player is being focused")
+		return
+	end
+	local player = PlayerManager.focus
+	local _, err = player.connection.send({ command = { "stop" } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'stop' request to player, cause:\n" .. err)
+		return
+	end
+end
+
 -- TODO:
 -- stop()
 -- seek()
