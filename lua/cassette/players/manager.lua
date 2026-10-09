@@ -11,6 +11,7 @@ PlayerManager.opts = {}
 
 local MODULE_ORIGIN = "Player Manager"
 
+-- TODO: decide where and when upadte player fields(title, video, volume, ...), current idea: update manualy and only retrieve property when sync
 function PlayerManager.setup(player_configs)
 	PlayerManager.opts = player_configs
 end
