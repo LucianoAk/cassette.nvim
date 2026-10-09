@@ -155,22 +155,6 @@ function PlayerManager.sync()
 	player.playlist_count = get_prop("playlist-count") or player.playlist_count
 end
 
--- TODO:
--- sync()
---
--- based on:
---
--- function Player:updateMediaFields()
--- 	self.title = connector.send(self.connection, { command = { "get_property", "media-title" } }).data
--- 	self.path = connector.send(self.connection, { command = { "get_property", "path" } }).data
--- 	self.playlist_pos = connector.send(self.connection, { command = { "get_property", "playlist-pos" } }).data + 1
--- 	self.playlist_count = connector.send(self.connection, { command = { "get_property", "playlist-count" } }).data
--- end
---
--- function Player:sync_status()
--- 	self.pause = connector.send(self.connection, { command = { "get_property", "pause" } }).data
--- end
-
 function PlayerManager.search_active_sockets()
 	local path = PlayerManager.opts.socket_path
 	local template = PlayerManager.opts.socket_name_template
