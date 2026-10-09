@@ -50,6 +50,16 @@ function PlayerManager.load(path)
 	end
 end
 
+-- TODO:
+-- stop()
+-- seek()
+-- next()
+-- previous()
+-- toggle_playback()
+-- sync()
+--
+-- based on:
+--
 -- function Player:stop()
 -- 	local response, error = connector.send(self.connection, { command = { "stop" } })
 -- 	if error then
