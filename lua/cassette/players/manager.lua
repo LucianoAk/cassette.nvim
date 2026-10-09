@@ -78,6 +78,21 @@ function PlayerManager.seek(time)
 	end
 end
 
+function PlayerManager.next()
+	if not PlayerManager.focus then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'next' request, no player is being focused")
+		return
+	end
+	local player = PlayerManager.focus
+	local _, err = player.connection.send({ command = { "playlist-next" } })
+	player.playlist_pos = player.playlist_pos + 1
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
+		return
+	end
+end
+
 -- TODO:
 -- next()
 -- previous()
