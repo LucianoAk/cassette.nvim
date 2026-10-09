@@ -79,17 +79,12 @@ function PlayerManager.seek(time)
 end
 
 -- TODO:
--- seek()
 -- next()
 -- previous()
 -- toggle_playback()
 -- sync()
 --
 -- based on:
---
--- function Player:seek(time)
--- 	connector.send(self.connection, { command = { "seek", time } })
--- end
 --
 -- function Player:next()
 -- 	connector.send(self.connection, { command = { "playlist-next" } })
