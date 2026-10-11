@@ -19,6 +19,11 @@ function PlayerManager.setup(player_configs)
 end
 
 function PlayerManager.change_focus(index)
+	if not PlayerManager.running_players or #PlayerManager.running_players == 0 then
+		Logger.warn(MODULE_ORIGIN, "Operation 'focus' cannot be completed because there are no running players")
+		return
+	end
+
 	if not (index >= 1 and index <= #PlayerManager.running_players) then
 		Logger.warn(MODULE_ORIGIN, "PlayerManager: player index not in the bounds of the list of running players")
 		return
