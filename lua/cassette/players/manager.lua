@@ -96,7 +96,14 @@ function PlayerManager.next()
 		Logger.warn(MODULE_ORIGIN, "could not complete 'next' request, no player is being focused")
 		return
 	end
+
 	local player = PlayerManager.focus
+
+	if player.playlist_pos >= player.playlist_count then
+		Logger.warn(MODULE_ORIGIN, "End of playlist reached")
+		return
+	end
+
 	local _, err = player.connection:send({ command = { "playlist-next" } })
 
 	if err then
@@ -112,7 +119,14 @@ function PlayerManager.previous()
 		Logger.warn(MODULE_ORIGIN, "could not complete 'previous' request, no player is being focused")
 		return
 	end
+
 	local player = PlayerManager.focus
+
+	if player.playlist_pos <= 1 then
+		Logger.warn(MODULE_ORIGIN, "Beginning of playlist reached")
+		return
+	end
+
 	local _, err = player.connection:send({ command = { "playlist-prev" } })
 
 	if err then
