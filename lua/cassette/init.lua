@@ -41,13 +41,22 @@ function cassette.startVideo(path)
 	player_manager.add(video_player)
 end
 
-function cassette.startMusic(source)
-	local musicPlayer = player.new(false, source)
+function cassette.startMusic(path)
+	local music_player, err = mpv_builder
+		.new()
+		:path(path)
+		:video(false)
+		:socket(player_manager.opts.socket_path, player_manager.opts.socket_name_template)
+		:process()
+		:connection()
+		:build()
 
-	if not musicPlayer then
-		vim.notify("Failed to start player: MPV player could not be initialized.", vim.log.levels.ERROR)
+	if err then
+		logger.error(err.origin, err.message)
 		return
 	end
+
+	player_manager.add(music_player)
 end
 
 function cassette.load(source)
