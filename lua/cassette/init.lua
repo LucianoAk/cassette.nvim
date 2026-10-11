@@ -29,8 +29,8 @@ function cassette.startVideo(path)
 		:path(path)
 		:video(true)
 		:socket(player_manager.opts.socket_path, player_manager.opts.socket_name_template)
-		:connection()
 		:process()
+		:connection()
 		:build()
 
 	if err then
