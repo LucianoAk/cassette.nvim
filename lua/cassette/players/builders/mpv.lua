@@ -115,16 +115,6 @@ function MpvBuilder:process(extras_args)
 		return self
 	end
 
-	local _, err = Executor.watch_pid(handle.pid, function(pid)
-		Handler.end_process(self, require("cassette.players.manager").running_players)
-		Logger.info(MODULE_ORIGIN, "Stopped player PID: " .. pid)
-	end)
-
-	if err then
-		self.err = Logger.build_err(err.origin, err.message)
-		return self
-	end
-
 	self._process = handle
 
 	return self

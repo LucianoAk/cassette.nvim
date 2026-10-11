@@ -1,5 +1,7 @@
 local IpcConnection = require("cassette.connection.ipc")
 local Logger = require("cassette.utils.logger")
+local Executor = require("cassette.utils.executor")
+local Handler = require("cassette.players.handler")
 
 local PlayerManager = {}
 PlayerManager.__index = PlayerManager
@@ -31,6 +33,16 @@ function PlayerManager.add(player)
 			MODULE_ORIGIN,
 			"PlayerManager: cannot add player to 'running_players' table, process is not established, 'build' player before adding"
 		)
+		return
+	end
+
+	local _, err = Executor.watch_pid(player.process.pid, function(pid)
+		Handler.end_process(player, require("cassette.players.manager").running_players)
+		Logger.info(MODULE_ORIGIN, "Stopped player PID: " .. pid)
+	end)
+
+	if err then
+		player.err = Logger.build_err(err.origin, err.message)
 		return
 	end
 
