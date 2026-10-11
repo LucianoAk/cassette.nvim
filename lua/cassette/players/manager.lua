@@ -30,6 +30,7 @@ function PlayerManager.change_focus(index)
 	end
 
 	PlayerManager.focus = PlayerManager.running_players[index]
+	return PlayerManager.focus
 end
 
 function PlayerManager.add(player)
