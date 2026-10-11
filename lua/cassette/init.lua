@@ -1,6 +1,9 @@
 local cassette = {}
 
 local player = require("cassette.player")
+local player_manager = require("cassette.players.manager")
+local mpv_builder = require("cassette.players.builders.mpv")
+local logger = require("cassette.utils.logger")
 local ui = require("cassette.ui")
 local config = require("cassette.config")
 local autocmd = require("cassette.autocmd")
@@ -8,6 +11,7 @@ local autocmd = require("cassette.autocmd")
 function cassette.setup(user_opts)
 	config.setup(user_opts)
 	player.setup(config.options.player)
+	player_manager.setup(config.options.player)
 	autocmd.setup(config.options.session)
 
 	if config.options.session.persist and config.options.session.persist == true then
@@ -19,13 +23,22 @@ function cassette.setup(user_opts)
 	end
 end
 
-function cassette.startVideo(source)
-	local videoPlayer = player.new(true, source)
+function cassette.startVideo(path)
+	local video_player, err = mpv_builder
+		.new()
+		:path(path)
+		:video(true)
+		:socket(player_manager.opts.socket_path, player_manager.opts.socket_name_template)
+		:connection()
+		:process()
+		:build()
 
-	if not videoPlayer then
-		vim.notify("Failed to start player: MPV player could not be initialized.", vim.log.levels.ERROR)
+	if err then
+		logger.error(err.origin, err.message)
 		return
 	end
+
+	player_manager.add(video_player)
 end
 
 function cassette.startMusic(source)
