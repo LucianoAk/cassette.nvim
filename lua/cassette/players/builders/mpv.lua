@@ -135,6 +135,11 @@ function MpvBuilder:connection()
 		return self
 	end
 
+	if not self._proces then
+		self.err = Logger.build_err(MODULE_ORIGIN, "cannot establish connection, start process before connecting")
+		return self
+	end
+
 	local connection, err
 	connection, err = IpcConnection.new(self._socket, function(msg)
 		Handler.ipc_message(connection, msg)
