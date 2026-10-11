@@ -125,7 +125,7 @@ function MpvBuilder:process(extras_args)
 		return self
 	end
 
-	self._proces = handle
+	self._process = handle
 
 	return self
 end
@@ -135,7 +135,7 @@ function MpvBuilder:connection()
 		return self
 	end
 
-	if not self._proces then
+	if not self._process then
 		self.err = Logger.build_err(MODULE_ORIGIN, "cannot establish connection, start process before connecting")
 		return self
 	end
