@@ -2,7 +2,6 @@ local cassette = {}
 
 local player = require("cassette.player")
 local player_manager = require("cassette.players.manager")
-local mpv_builder = require("cassette.players.builders.mpv")
 local mpv_player = require("cassette.players.mpv")
 local logger = require("cassette.utils.logger")
 local ui = require("cassette.ui")
