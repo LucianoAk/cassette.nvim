@@ -16,6 +16,8 @@ function MpvPlayer.new(builder)
 	self.process = builder._process
 	self.connection = builder._connection
 
+	self:sync()
+
 	return self
 end
 
