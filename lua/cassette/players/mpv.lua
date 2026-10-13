@@ -52,4 +52,15 @@ function MpvPlayer:sync()
 	return self
 end
 
+function MpvPlayer:load(path)
+	local _, err = self.connection:send({ command = { "loadfile", path } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'load' request to player, cause:\n" .. err)
+		return self
+	end
+
+	return self:sync()
+end
+
 return MpvPlayer

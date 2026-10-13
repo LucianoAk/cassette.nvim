@@ -26,4 +26,8 @@ function BasePlayer:sync()
 	return nil, "Cannot call 'sync' from base player"
 end
 
+function BasePlayer:load()
+	return nil, "Cannot call 'path' from base player"
+end
+
 return BasePlayer

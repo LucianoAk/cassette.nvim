@@ -60,13 +60,11 @@ function PlayerManager.load(path)
 		Logger.warn(MODULE_ORIGIN, "could not complete 'load' request, no player is being focused")
 		return
 	end
-	local player = PlayerManager.focus
-	local _, err = player.connection:send({ command = { "loadfile", path } })
-
-	if err then
-		Logger.warn(MODULE_ORIGIN, "could not complete 'load' request to player, cause:\n" .. err)
+	if not path or path == "" then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'load' request, 'path' value is empty")
 		return
 	end
+	return PlayerManager.foucs:load(path)
 end
 
 function PlayerManager.stop()
