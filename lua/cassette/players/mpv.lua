@@ -119,4 +119,15 @@ function MpvPlayer:previous()
 	return self
 end
 
+function MpvPlayer:toggle_playback()
+	local _, err = self.connection:send({ command = { "cycle", "pause" } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'toggle_playback' request to player, cause:\n" .. err)
+		return self
+	end
+
+	self.pause = not self.pause
+end
+
 return MpvPlayer

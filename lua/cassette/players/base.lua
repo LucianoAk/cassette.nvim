@@ -46,4 +46,8 @@ function BasePlayer:previous()
 	return nil, "Cannot call 'previous' from base player"
 end
 
+function BasePlayer:toggle_playback()
+	return nil, "Cannot call 'toggle_playback' from base player"
+end
+
 return BasePlayer
