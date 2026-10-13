@@ -38,4 +38,8 @@ function BasePlayer:seek()
 	return nil, "Cannot call 'seek' from base player"
 end
 
+function BasePlayer:next()
+	return nil, "Cannot call 'next' from base player"
+end
+
 return BasePlayer

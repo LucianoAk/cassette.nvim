@@ -89,21 +89,7 @@ function PlayerManager.next()
 		return
 	end
 
-	local player = PlayerManager.focus
-
-	if player.playlist_pos >= player.playlist_count then
-		Logger.warn(MODULE_ORIGIN, "End of playlist reached")
-		return
-	end
-
-	local _, err = player.connection:send({ command = { "playlist-next" } })
-
-	if err then
-		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
-		return
-	end
-
-	player.playlist_pos = player.playlist_pos + 1
+	return PlayerManager.focus:next()
 end
 
 function PlayerManager.previous()
