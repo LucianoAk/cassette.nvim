@@ -33,6 +33,7 @@ function cassette.startVideo(path)
 		:process()
 		:connection()
 		:build()
+	video_player:sync()
 
 	if err then
 		logger.error(err.origin, err.message)
@@ -51,6 +52,7 @@ function cassette.startMusic(path)
 		:process()
 		:connection()
 		:build()
+	music_player:sync()
 
 	if err then
 		logger.error(err.origin, err.message)
