@@ -53,6 +53,7 @@ function PlayerManager.add(player)
 	end
 
 	table.insert(PlayerManager.running_players, player)
+	PlayerManager.focus = player
 end
 
 function PlayerManager.load(path)
