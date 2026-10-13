@@ -16,4 +16,8 @@ function BasePlayer.new(builder)
 	return self
 end
 
+function BasePlayer:sync()
+	return nil, "Cannot call 'sync' from base player"
+end
+
 return BasePlayer
