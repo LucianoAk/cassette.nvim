@@ -1,6 +1,5 @@
 local cassette = {}
 
-local player = require("cassette.player")
 local player_manager = require("cassette.players.manager")
 local mpv_player = require("cassette.players.mpv")
 local logger = require("cassette.utils.logger")
@@ -10,7 +9,6 @@ local autocmd = require("cassette.autocmd")
 
 function cassette.setup(user_opts)
 	config.setup(user_opts)
-	player.setup(config.options.player)
 	player_manager.setup(config.options.player)
 	autocmd.setup(config.options.session)
 
@@ -88,12 +86,12 @@ function cassette.focus()
 		return string.format("▶ Player: %s", p.title or "")
 	end, function(choice, index)
 		if choice then
-			local focus = player_manager.change_focus(index)
-			if not focus then
-				return
-			end
-			ui.updateCache(focus.title, focus.path, focus.playlist_pos, focus.playlist_count)
-			return
+			player_manager.change_focus(index)
+			vim.schedule(function()
+				vim.api.nvim_exec_autocmds("User", {
+					pattern = "UpdateUICache",
+				})
+			end)
 		end
 	end)
 end

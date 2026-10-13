@@ -3,11 +3,8 @@ MpvHandler.__index = MpvHandler
 
 function MpvHandler.ipc_message(connection, msg)
 	local event_map = {
-		["end-file"] = "CleanUICache",
-		["file-loaded"] = "UpdateUICache",
-		path = "UpdateUICache",
-		["playlist-pos"] = "UpdateUICache",
-		pause = "UpdatePlayerStatus",
+		["end-file"] = { "CleanUICache" },
+		["file-loaded"] = { "SyncPlayerFields", "UpdateUICache" },
 	}
 
 	if msg.request_id and connection._pending[msg.request_id] then
@@ -17,10 +14,12 @@ function MpvHandler.ipc_message(connection, msg)
 		return
 	end
 
-	local trigger_event = event_map[msg.event] or event_map[msg.name]
-	if trigger_event then
+	local trigger_events = event_map[msg.event] or event_map[msg.name]
+	if trigger_events then
 		vim.schedule(function()
-			vim.api.nvim_exec_autocmds("User", { pattern = trigger_event })
+			for _, event in ipairs(trigger_events) do
+				vim.api.nvim_exec_autocmds("User", { pattern = event })
+			end
 		end)
 	end
 end

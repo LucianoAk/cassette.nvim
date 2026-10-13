@@ -1,5 +1,4 @@
 local ui = require("cassette.ui")
-local player = require("cassette.player")
 local PlayerManager = require("cassette.players.manager")
 local MpvPlayer = require("cassette.players.mpv")
 
@@ -9,20 +8,24 @@ local opts = {}
 function autocmd.setup(autocmd_configs)
 	opts = autocmd_configs or {}
 
+	local player_field_group = vim.api.nvim_create_augroup("CassettePlayerFields", { clear = true })
+
+	vim.api.nvim_create_autocmd("User", {
+		group = player_field_group,
+		pattern = "SyncPlayerFields",
+		callback = function()
+			PlayerManager.focus:sync()
+		end,
+	})
+
 	local ui_cache_group = vim.api.nvim_create_augroup("CasssetteUICache", { clear = true })
 
 	vim.api.nvim_create_autocmd("User", {
 		group = ui_cache_group,
 		pattern = "UpdateUICache",
-		callback = function(ev)
-			if player.focus then
-				player.focus:updateMediaFields()
-				ui.updateCache(
-					player.focus.title,
-					player.focus.path,
-					player.focus.playlist_pos,
-					player.focus.playlist_count
-				)
+		callback = function()
+			if PlayerManager.focus then
+				ui.updateCache()
 			else
 				ui.cleanCache()
 			end
@@ -33,21 +36,9 @@ function autocmd.setup(autocmd_configs)
 	vim.api.nvim_create_autocmd("User", {
 		group = ui_cache_group,
 		pattern = "CleanUICache",
-		callback = function(ev)
+		callback = function()
 			ui.cleanCache()
 			vim.cmd.redrawstatus()
-		end,
-	})
-
-	local player_status_group = vim.api.nvim_create_augroup("CassettePlayerStatus", { clear = true })
-
-	vim.api.nvim_create_autocmd("User", {
-		group = player_status_group,
-		pattern = "UpdatePlayerStatus",
-		callback = function()
-			if player.focus then
-				player.focus:sync_status()
-			end
 		end,
 	})
 
@@ -57,7 +48,7 @@ function autocmd.setup(autocmd_configs)
 		group = plugin_cleanup_group,
 		callback = function()
 			if not opts.persist or opts.persist == false then
-				for _, p in ipairs(player.running_players) do
+				for _, p in ipairs(PlayerManager.running_players) do
 					p:stop()
 				end
 			end

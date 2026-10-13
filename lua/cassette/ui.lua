@@ -1,3 +1,5 @@
+local PlayerManager = require("cassette.players.manager")
+
 local ui = {}
 
 ui.cache = {}
@@ -24,21 +26,21 @@ function ui.getStatusLine()
 	if ui.cache.playlist_count and ui.cache.playlist_count > 1 then
 		return string.format(
 			"%s Playing: [ %s ] %d/%d",
-			_getPlatformIcon(ui.cache.path or ""),
-			ui.cache.mediaTitle or "",
-			ui.cache.playlist_pos or 0,
-			ui.cache.playlist_count or 0
+			_getPlatformIcon(ui.cache.path),
+			ui.cache.mediaTitle,
+			ui.cache.playlist_pos + 1,
+			ui.cache.playlist_count
 		)
 	end
 	return string.format("%s Playing: [ %s ]", _getPlatformIcon(ui.cache.path or ""), ui.cache.mediaTitle or "")
 end
 
-function ui.updateCache(title, path, playlist_pos, playlist_count)
+function ui.updateCache()
 	ui.cache = {
-		mediaTitle = title,
-		path = path,
-		playlist_pos = playlist_pos,
-		playlist_count = playlist_count,
+		mediaTitle = PlayerManager.focus.title or "?",
+		path = PlayerManager.focus.path or "?",
+		playlist_pos = PlayerManager.focus.playlist_pos or "?",
+		playlist_count = PlayerManager.focus.playlist_count or "?",
 	}
 end
 
