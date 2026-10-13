@@ -79,7 +79,7 @@ function MpvPlayer:seek(time)
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
-		return
+		return self
 	end
 
 	return self
@@ -95,10 +95,27 @@ function MpvPlayer:next()
 
 	if err then
 		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
-		return
+		return self
 	end
 
 	self.playlist_pos = self.playlist_pos + 1
+	return self
+end
+
+function MpvPlayer:previous()
+	if self.playlist_pos <= 1 then
+		Logger.warn(MODULE_ORIGIN, "Beginning of playlist reached")
+		return self
+	end
+
+	local _, err = self.connection:send({ command = { "playlist-prev" } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'previous' request to player, cause:\n" .. err)
+		return self
+	end
+
+	self.playlist_pos = self.playlist_pos - 1
 	return self
 end
 

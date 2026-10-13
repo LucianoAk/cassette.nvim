@@ -98,21 +98,7 @@ function PlayerManager.previous()
 		return
 	end
 
-	local player = PlayerManager.focus
-
-	if player.playlist_pos <= 1 then
-		Logger.warn(MODULE_ORIGIN, "Beginning of playlist reached")
-		return
-	end
-
-	local _, err = player.connection:send({ command = { "playlist-prev" } })
-
-	if err then
-		Logger.warn(MODULE_ORIGIN, "could not complete 'previous' request to player, cause:\n" .. err)
-		return
-	end
-
-	player.playlist_pos = player.playlist_pos - 1
+	return PlayerManager.focus:previous()
 end
 
 function PlayerManager.toggle_playback()

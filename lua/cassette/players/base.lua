@@ -42,4 +42,8 @@ function BasePlayer:next()
 	return nil, "Cannot call 'next' from base player"
 end
 
+function BasePlayer:previous()
+	return nil, "Cannot call 'previous' from base player"
+end
+
 return BasePlayer
