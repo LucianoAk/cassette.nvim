@@ -80,13 +80,7 @@ function PlayerManager.seek(time)
 		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request, no player is being focused")
 		return
 	end
-	local player = PlayerManager.focus
-	local _, err = player.connection:send({ command = { "seek", time } })
-
-	if err then
-		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
-		return
-	end
+	return PlayerManager.focus:seek(time)
 end
 
 function PlayerManager.next()

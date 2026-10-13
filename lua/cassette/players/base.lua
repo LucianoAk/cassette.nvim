@@ -34,4 +34,8 @@ function BasePlayer:stop()
 	return nil, "Cannot call 'stop' from base player"
 end
 
+function BasePlayer:seek()
+	return nil, "Cannot call 'seek' from base player"
+end
+
 return BasePlayer

@@ -74,4 +74,15 @@ function MpvPlayer:stop()
 	return self
 end
 
+function MpvPlayer:seek(time)
+	local _, err = self.connection:send({ command = { "seek", time } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'seek' request to player, cause:\n" .. err)
+		return
+	end
+
+	return self
+end
+
 return MpvPlayer
