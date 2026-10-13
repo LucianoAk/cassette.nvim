@@ -3,6 +3,7 @@ local cassette = {}
 local player = require("cassette.player")
 local player_manager = require("cassette.players.manager")
 local mpv_builder = require("cassette.players.builders.mpv")
+local mpv_player = require("cassette.players.mpv")
 local logger = require("cassette.utils.logger")
 local ui = require("cassette.ui")
 local config = require("cassette.config")
@@ -24,8 +25,8 @@ function cassette.setup(user_opts)
 end
 
 function cassette.startVideo(path)
-	local video_player, err = mpv_builder
-		.new()
+	local video_player, err = mpv_player
+		.builder()
 		:path(path)
 		:video(true)
 		:socket(player_manager.opts.socket_path, player_manager.opts.socket_name_template)
@@ -42,8 +43,8 @@ function cassette.startVideo(path)
 end
 
 function cassette.startMusic(path)
-	local music_player, err = mpv_builder
-		.new()
+	local music_player, err = mpv_player
+		.builder()
 		:path(path)
 		:video(false)
 		:socket(player_manager.opts.socket_path, player_manager.opts.socket_name_template)
