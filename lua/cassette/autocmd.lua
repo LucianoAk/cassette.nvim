@@ -1,5 +1,7 @@
 local ui = require("cassette.ui")
 local player = require("cassette.player")
+local PlayerManager = require("cassette.players.manager")
+local MpvPlayer = require("cassette.players.mpv")
 
 local autocmd = {}
 local opts = {}
@@ -68,7 +70,7 @@ function autocmd.setup(autocmd_configs)
 		group = plugin_initialization_group,
 		pattern = "ReconnectSockets",
 		callback = function()
-			local active_sockets = player.search_active_sockets()
+			local active_sockets = PlayerManager.search_active_sockets()
 
 			if not active_sockets or #active_sockets == 0 then
 				return
@@ -76,7 +78,7 @@ function autocmd.setup(autocmd_configs)
 
 			if opts.reconnect_mode == "auto-reconnect" then
 				for _, socket in ipairs(active_sockets) do
-					player.reconnect_socket(socket)
+					PlayerManager.add(MpvPlayer.builder().restore(socket):build())
 				end
 			elseif opts.reconnect_mode == "ask-all" then
 				ui.ask_reconnect_socket(
@@ -84,7 +86,7 @@ function autocmd.setup(autocmd_configs)
 					function(reconnect)
 						if reconnect then
 							for _, socket in ipairs(active_sockets) do
-								player.reconnect_socket(socket)
+								PlayerManager.add(MpvPlayer.builder().restore(socket):build())
 							end
 						end
 					end
@@ -111,8 +113,7 @@ function autocmd.setup(autocmd_configs)
 						),
 						function(reconnect)
 							if reconnect then
-								player.reconnect_socket(socket)
-								vim.notify(vim.inspect(player.running_players))
+								PlayerManager.add(MpvPlayer.builder().restore(socket):build())
 							end
 							process_next()
 						end
