@@ -72,13 +72,7 @@ function PlayerManager.stop()
 		Logger.warn(MODULE_ORIGIN, "could not complete 'stop' request, no player is being focused")
 		return
 	end
-	local player = PlayerManager.focus
-	local _, err = player.connection:send({ command = { "stop" } })
-
-	if err then
-		Logger.warn(MODULE_ORIGIN, "could not complete 'stop' request to player, cause:\n" .. err)
-		return
-	end
+	return PlayerManager.focus:stop()
 end
 
 function PlayerManager.seek(time)

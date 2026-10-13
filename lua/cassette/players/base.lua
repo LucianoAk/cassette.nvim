@@ -30,4 +30,8 @@ function BasePlayer:load()
 	return nil, "Cannot call 'path' from base player"
 end
 
+function BasePlayer:stop()
+	return nil, "Cannot call 'stop' from base player"
+end
+
 return BasePlayer

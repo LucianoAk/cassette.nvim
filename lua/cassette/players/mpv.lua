@@ -63,4 +63,15 @@ function MpvPlayer:load(path)
 	return self:sync()
 end
 
+function MpvPlayer:stop()
+	local _, err = self.connection:send({ command = { "stop" } })
+
+	if err then
+		Logger.warn(MODULE_ORIGIN, "could not complete 'stop' request to player, cause:\n" .. err)
+		return
+	end
+
+	return self
+end
+
 return MpvPlayer
