@@ -98,7 +98,6 @@ function MpvPlayer:next()
 		return self
 	end
 
-	self.playlist_pos = self.playlist_pos + 1
 	return self
 end
 
@@ -115,7 +114,6 @@ function MpvPlayer:previous()
 		return self
 	end
 
-	self.playlist_pos = self.playlist_pos - 1
 	return self
 end
 
@@ -128,6 +126,7 @@ function MpvPlayer:toggle_playback()
 	end
 
 	self.pause = not self.pause
+	return self
 end
 
 return MpvPlayer
