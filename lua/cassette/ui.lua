@@ -55,9 +55,9 @@ function ui.show_player_picker(list, formatter, on_select)
 	vim.ui.select(list, {
 		prompt = "Select a Player:",
 		format_item = formatter,
-	}, function(choice)
+	}, function(choice, index)
 		if on_select then
-			on_select(choice)
+			on_select(choice, index)
 		end
 	end)
 end

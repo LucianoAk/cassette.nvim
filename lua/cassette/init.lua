@@ -86,10 +86,13 @@ end
 function cassette.focus()
 	ui.show_player_picker(player_manager.running_players, function(p)
 		return string.format("▶ Player: %s", p.title or "")
-	end, function(choice)
+	end, function(choice, index)
 		if choice then
-			player.change_focus(choice)
-			ui.updateCache(choice.title, choice.path, choice.playlist_pos, choice.playlist_count)
+			local focus = player_manager.change_focus(index)
+			if not focus then
+				return
+			end
+			ui.updateCache(focus.title, focus.path, focus.playlist_pos, focus.playlist_count)
 			return
 		end
 	end)
