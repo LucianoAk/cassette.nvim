@@ -1,3 +1,5 @@
+local BaseBuilder = require("cassette.players.builders.base")
+
 local BasePlayer = {}
 BasePlayer.__index = BasePlayer
 
