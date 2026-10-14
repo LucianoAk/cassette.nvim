@@ -95,7 +95,7 @@ function Cassette.focus()
 	end)
 end
 
-function Cassette.getUIStatusLine()
+function Cassette.getStatusLine()
 	return Statusline.get()
 end
 
