@@ -1,5 +1,3 @@
-local Cassette = {}
-
 local PlayerManager = require("cassette.players.manager")
 local MpvPlayer = require("cassette.players.mpv")
 local Logger = require("cassette.utils.logger")
@@ -7,6 +5,8 @@ local Statusline = require("cassette.ui.statusline")
 local Popup = require("cassette.ui.popup")
 local Config = require("cassette.config")
 local Autocmd = require("cassette.autocmd")
+
+local Cassette = {}
 
 function Cassette.setup(user_opts)
 	Config.setup(user_opts)
