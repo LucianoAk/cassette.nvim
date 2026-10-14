@@ -1,4 +1,4 @@
-local ui = require("cassette.ui")
+local ui = require("cassette.ui.ui")
 local PlayerManager = require("cassette.players.manager")
 local MpvPlayer = require("cassette.players.mpv")
 
