@@ -38,5 +38,5 @@ _Note: support for other media players and extractors may be added later_
 ## Acknowledgments
 
 This project relies on other projects' functionalities for its resources and features:
-- [mpv](https://github.com/mpv-player/mpv): A free (as in freedom) media player for the command line.
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp): A feature-rich command-line audio/video downloader with support for thousands of sites.
+- [mpv](https://github.com/mpv-player/mpv): Described as a free (as in freedom) media player for the command line.
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp): Described as a feature-rich command-line audio/video downloader with support for thousands of sites.
