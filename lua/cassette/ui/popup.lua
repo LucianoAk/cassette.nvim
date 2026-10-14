@@ -1,6 +1,6 @@
-local popup = {}
+local Popup = {}
 
-function popup.show_player_picker(list, formatter, on_select)
+function Popup.show_player_picker(list, formatter, on_select)
 	vim.ui.select(list, {
 		prompt = "Select a Player:",
 		format_item = formatter,
@@ -11,7 +11,7 @@ function popup.show_player_picker(list, formatter, on_select)
 	end)
 end
 
-function popup.ask_reconnect_socket(prompt, on_select)
+function Popup.ask_reconnect_socket(prompt, on_select)
 	vim.ui.select({ "Yes", "No" }, {
 		prompt = prompt,
 	}, function(choice)
@@ -19,4 +19,4 @@ function popup.ask_reconnect_socket(prompt, on_select)
 	end)
 end
 
-return popup
+return Popup
