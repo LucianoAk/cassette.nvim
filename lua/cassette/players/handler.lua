@@ -3,8 +3,8 @@ MpvHandler.__index = MpvHandler
 
 function MpvHandler.ipc_message(connection, msg)
 	local event_map = {
-		["end-file"] = { "CleanUICache" },
-		["file-loaded"] = { "SyncPlayerFields", "UpdateUICache" },
+		-- ["end-file"] = { "CleanUICache" },
+		["file-loaded"] = { "SyncPlayerFields" },
 		pause = { "SyncPlayerPause" },
 	}
 

@@ -2,7 +2,6 @@ local PlayerManager = require("cassette.players.manager")
 
 local Statusline = {}
 
-Statusline.cache = {}
 Statusline.opts = {}
 
 function Statusline.setup(statusline_configs)
@@ -30,38 +29,18 @@ function Statusline.get()
 	if Statusline.opts.hide_no_players and #PlayerManager.running_players == 0 then
 		return ""
 	end
-	if Statusline.cache.playlist_count and Statusline.cache.playlist_count > 1 then
+
+	local player = PlayerManager.focus
+	if player and player.playlist_count and player.playlist_count > 1 then
 		return string.format(
 			"%s Playing: [ %s ] %d/%d",
-			_getPlatformIcon(Statusline.cache.path),
-			Statusline.cache.mediaTitle,
-			Statusline.cache.playlist_pos + 1,
-			Statusline.cache.playlist_count
+			_getPlatformIcon(player.path),
+			player.title,
+			player.playlist_pos + 1,
+			player.playlist_count
 		)
 	end
-	return string.format(
-		"%s Playing: [ %s ]",
-		_getPlatformIcon(Statusline.cache.path or ""),
-		Statusline.cache.mediaTitle or ""
-	)
-end
-
-function Statusline.updateCache()
-	Statusline.cache = {
-		mediaTitle = PlayerManager.focus.title or "?",
-		path = PlayerManager.focus.path or "?",
-		playlist_pos = PlayerManager.focus.playlist_pos or "?",
-		playlist_count = PlayerManager.focus.playlist_count or "?",
-	}
-end
-
-function Statusline.cleanCache()
-	Statusline.cache = {
-		mediaTitle = "",
-		path = "",
-		playlist_pos = 0,
-		playlist_count = 0,
-	}
+	return string.format("%s Playing: [ %s ]", _getPlatformIcon(player.path or ""), player.title or "")
 end
 
 return Statusline

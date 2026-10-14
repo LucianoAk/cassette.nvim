@@ -1,4 +1,3 @@
-local Statusline = require("cassette.ui.statusline")
 local Popup = require("cassette.ui.popup")
 local PlayerManager = require("cassette.players.manager")
 local MpvPlayer = require("cassette.players.mpv")
@@ -24,30 +23,6 @@ function autocmd.setup(autocmd_configs)
 		pattern = "SyncPlayerPause",
 		callback = function()
 			PlayerManager.focus:sync_field("pause")
-		end,
-	})
-
-	local ui_cache_group = vim.api.nvim_create_augroup("CasssetteUICache", { clear = true })
-
-	vim.api.nvim_create_autocmd("User", {
-		group = ui_cache_group,
-		pattern = "UpdateUICache",
-		callback = function()
-			if PlayerManager.focus then
-				Statusline.updateCache()
-			else
-				Statusline.cleanCache()
-			end
-			vim.cmd.redrawstatus()
-		end,
-	})
-
-	vim.api.nvim_create_autocmd("User", {
-		group = ui_cache_group,
-		pattern = "CleanUICache",
-		callback = function()
-			Statusline.cleanCache()
-			vim.cmd.redrawstatus()
 		end,
 	})
 
