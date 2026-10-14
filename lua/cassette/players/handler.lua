@@ -5,6 +5,7 @@ function MpvHandler.ipc_message(connection, msg)
 	local event_map = {
 		["end-file"] = { "CleanUICache" },
 		["file-loaded"] = { "SyncPlayerFields", "UpdateUICache" },
+		pause = { "SyncPlayerPause" },
 	}
 
 	if msg.request_id and connection._pending[msg.request_id] then

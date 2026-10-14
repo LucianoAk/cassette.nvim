@@ -19,6 +19,14 @@ function autocmd.setup(autocmd_configs)
 		end,
 	})
 
+	vim.api.nvim_create_autocmd("User", {
+		group = player_field_group,
+		pattern = "SyncPlayerPause",
+		callback = function()
+			PlayerManager.focus:sync_field("pause")
+		end,
+	})
+
 	local ui_cache_group = vim.api.nvim_create_augroup("CasssetteUICache", { clear = true })
 
 	vim.api.nvim_create_autocmd("User", {
