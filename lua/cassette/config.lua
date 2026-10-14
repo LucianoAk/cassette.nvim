@@ -7,6 +7,11 @@ config.defaults = {
 		socket_path = "/tmp/",
 		socket_name_template = "mpv-socket-%nanoid",
 	},
+	ui = {
+		statusline = {
+			hide_no_players = true,
+		},
+	},
 	session = {
 		persist = true,
 		reconnect_mode = "auto-reconnect",

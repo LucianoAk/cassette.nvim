@@ -12,6 +12,7 @@ function Cassette.setup(user_opts)
 	Config.setup(user_opts)
 	PlayerManager.setup(Config.options.player)
 	Autocmd.setup(Config.options.session)
+	Statusline.setup(Config.options.ui.statusline)
 
 	if Config.options.session.persist and Config.options.session.persist == true then
 		vim.schedule(function()

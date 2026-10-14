@@ -3,6 +3,11 @@ local PlayerManager = require("cassette.players.manager")
 local Statusline = {}
 
 Statusline.cache = {}
+Statusline.opts = {}
+
+function Statusline.setup(statusline_configs)
+	Statusline.opts = statusline_configs or {}
+end
 
 local function _getPlatformIcon(url)
 	if url:match("youtube%.com") or url:match("youtu%.be") then
