@@ -10,7 +10,9 @@ function Statusline.setup(statusline_configs)
 end
 
 local function _getPlatformIcon(url)
-	if url:match("youtube%.com") or url:match("youtu%.be") then
+	if PlayerManager.focus.pause and PlayerManager.focus.pause == false then
+		return "󰏤"
+	elseif url:match("youtube%.com") or url:match("youtu%.be") then
 		return "󰗃"
 	elseif url:match("twitch%.tv") then
 		return "󰕃"
