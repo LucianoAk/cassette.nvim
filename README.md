@@ -40,3 +40,7 @@ _Note: support for other media players and extractors may be added later_
 This project relies on other projects' functionalities for its resources and features:
 - [mpv](https://github.com/mpv-player/mpv): Described as a free (as in freedom) media player for the command line.
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp): Described as a feature-rich command-line audio/video downloader with support for thousands of sites.
+
+## License
+
+This project is distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
