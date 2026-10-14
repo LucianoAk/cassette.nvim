@@ -43,7 +43,7 @@ function PlayerManager.add(player)
 	end
 
 	local _, err = Executor.watch_pid(player.process.pid, function(pid)
-		Handler.end_process(player, require("cassette.players.manager").running_players)
+		Handler.end_process(player, PlayerManager.running_players, PlayerManager.focus)
 		Logger.info(MODULE_ORIGIN, "Stopped player PID: " .. pid)
 	end)
 

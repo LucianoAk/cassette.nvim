@@ -3,7 +3,6 @@ MpvHandler.__index = MpvHandler
 
 function MpvHandler.ipc_message(connection, msg)
 	local event_map = {
-		-- ["end-file"] = { "CleanUICache" },
 		["file-loaded"] = { "SyncPlayerFields" },
 		pause = { "SyncPlayerPause" },
 	}
@@ -25,7 +24,10 @@ function MpvHandler.ipc_message(connection, msg)
 	end
 end
 
-function MpvHandler.end_process(player, list)
+function MpvHandler.end_process(player, list, focus)
+	if player == focus then
+		focus = nil
+	end
 	for index, p in ipairs(list) do
 		if p == player then
 			os.remove(player.socket)
