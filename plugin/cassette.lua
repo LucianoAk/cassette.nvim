@@ -16,11 +16,6 @@ end, {
 	complete = "file",
 })
 
-vim.api.nvim_create_user_command("GetUIStatusLine", function()
-	local status_text = Cassette.getUIStatusLine()
-	vim.notify(status_text)
-end, {})
-
 vim.api.nvim_create_user_command("CassetteLoad", function(opts)
 	Cassette.load(opts.args)
 end, {
