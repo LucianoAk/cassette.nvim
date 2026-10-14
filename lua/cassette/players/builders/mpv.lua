@@ -201,10 +201,33 @@ function MpvBuilder.restore(socket)
 	self._socket = socket
 	self._process = { pid = get_prop("pid") }
 	self._connection = connection
+	self:observe("pause")
 
 	if err then
 		self.err = Logger.build_err(err.origin, err.message)
 		return self
+	end
+
+	return self
+end
+
+function MpvBuilder:observe(...)
+	local properties = { ... }
+
+	local function obs_prop(id, property)
+		local res, err = self._connection:send({ command = { "observe_property", id, property } })
+		if err then
+			Logger.warn(
+				MODULE_ORIGIN,
+				"could not observe property '" .. property .. "' with ID " .. id .. ", cause:\n" .. vim.inspect(err)
+			)
+			return
+		end
+		return res
+	end
+
+	for i, property in ipairs(properties) do
+		obs_prop(i, property)
 	end
 
 	return self

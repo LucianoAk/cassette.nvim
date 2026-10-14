@@ -30,6 +30,7 @@ function Cassette.startVideo(path)
 		:socket(PlayerManager.opts.socket_path, PlayerManager.opts.socket_name_template)
 		:process()
 		:connection()
+		:observe("pause")
 		:build()
 
 	if err then
@@ -47,6 +48,7 @@ function Cassette.startMusic(path)
 		:socket(PlayerManager.opts.socket_path, PlayerManager.opts.socket_name_template)
 		:process()
 		:connection()
+		:observe("pause")
 		:build()
 
 	if err then
