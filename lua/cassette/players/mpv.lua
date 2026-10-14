@@ -157,7 +157,6 @@ function MpvPlayer:toggle_playback()
 		return self
 	end
 
-	self.pause = not self.pause
 	return self
 end
 
