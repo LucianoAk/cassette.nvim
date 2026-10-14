@@ -1,5 +1,5 @@
-local statusline = require("cassette.ui.statusline")
-local popup = require("cassette.ui.popup")
+local Statusline = require("cassette.ui.statusline")
+local Popup = require("cassette.ui.popup")
 local PlayerManager = require("cassette.players.manager")
 local MpvPlayer = require("cassette.players.mpv")
 
@@ -26,9 +26,9 @@ function autocmd.setup(autocmd_configs)
 		pattern = "UpdateUICache",
 		callback = function()
 			if PlayerManager.focus then
-				statusline.updateCache()
+				Statusline.updateCache()
 			else
-				statusline.cleanCache()
+				Statusline.cleanCache()
 			end
 			vim.cmd.redrawstatus()
 		end,
@@ -38,7 +38,7 @@ function autocmd.setup(autocmd_configs)
 		group = ui_cache_group,
 		pattern = "CleanUICache",
 		callback = function()
-			statusline.cleanCache()
+			Statusline.cleanCache()
 			vim.cmd.redrawstatus()
 		end,
 	})
@@ -73,7 +73,7 @@ function autocmd.setup(autocmd_configs)
 					PlayerManager.add(MpvPlayer.builder().restore(socket):build())
 				end
 			elseif opts.reconnect_mode == "ask-all" then
-				popup.ask_reconnect_socket(
+				Popup.ask_reconnect_socket(
 					"Cassette found active player sockets, do you want to reconnect?",
 					function(reconnect)
 						if reconnect then
@@ -96,7 +96,7 @@ function autocmd.setup(autocmd_configs)
 					local socket = active_sockets[index]
 					index = index + 1
 
-					popup.ask_reconnect_socket(
+					Popup.ask_reconnect_socket(
 						string.format(
 							"Cassette found active socket '%s' (%d/%d), do you want to reconnect?",
 							socket,
