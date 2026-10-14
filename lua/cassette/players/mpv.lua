@@ -23,14 +23,14 @@ function MpvPlayer.builder()
 	return MpvBuilder.new()
 end
 
-function MpvPlayer:sync()
-	local function get_prop(name)
-		local res, err = self.connection:send({ command = { "get_property", name } })
+function MpvPlayer:sync_field(name)
+	local function get_prop(prop_name)
+		local res, err = self.connection:send({ command = { "get_property", prop_name } })
 
 		if err then
 			Logger.warn(
 				MODULE_ORIGIN,
-				"could not complete 'sync' request for '" .. name .. "' of player, cause:\n" .. vim.inspect(err)
+				"could not complete 'sync' request for '" .. prop_name .. "' of player, cause:\n" .. vim.inspect(err)
 			)
 			return nil
 		end
@@ -38,14 +38,48 @@ function MpvPlayer:sync()
 		return res and res.data or nil
 	end
 
-	self.path = get_prop("path") or self.path
-	self.title = get_prop("media-title") or self.title
-	self.video = not not get_prop("video") or self.video
-	self.volume = get_prop("volume") or self.volume
-	self.speed = get_prop("speed") or self.speed
-	self.pause = not not get_prop("pause") or self.pause
-	self.playlist_pos = get_prop("playlist-pos") or self.playlist_pos
-	self.playlist_count = get_prop("playlist-count") or self.playlist_count
+	if name == "path" then
+		self.path = get_prop("path") or self.path
+	elseif name == "media-title" then
+		self.title = get_prop("media-title") or self.title
+	elseif name == "video" then
+		local val = get_prop("video")
+		if val ~= nil then
+			self.video = not not val
+		end
+	elseif name == "volume" then
+		self.volume = get_prop("volume") or self.volume
+	elseif name == "speed" then
+		self.speed = get_prop("speed") or self.speed
+	elseif name == "pause" then
+		local val = get_prop("pause")
+		if val ~= nil then
+			self.pause = not not val
+		end
+	elseif name == "playlist-pos" then
+		self.playlist_pos = get_prop("playlist-pos") or self.playlist_pos
+	elseif name == "playlist-count" then
+		self.playlist_count = get_prop("playlist-count") or self.playlist_count
+	end
+
+	return self
+end
+
+function MpvPlayer:sync()
+	local properties = {
+		"path",
+		"media-title",
+		"video",
+		"volume",
+		"speed",
+		"pause",
+		"playlist-pos",
+		"playlist-count",
+	}
+
+	for _, prop in ipairs(properties) do
+		self:sync_field(prop)
+	end
 
 	return self
 end
