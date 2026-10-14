@@ -35,7 +35,7 @@ function MpvPlayer:sync_field(name)
 			return nil
 		end
 
-		return res and res.data or nil
+		return res and res.data
 	end
 
 	if name == "path" then
@@ -52,10 +52,7 @@ function MpvPlayer:sync_field(name)
 	elseif name == "speed" then
 		self.speed = get_prop("speed") or self.speed
 	elseif name == "pause" then
-		local val = get_prop("pause")
-		if val ~= nil then
-			self.pause = not not val
-		end
+		self.pause = not not get_prop("pause")
 	elseif name == "playlist-pos" then
 		self.playlist_pos = get_prop("playlist-pos") or self.playlist_pos
 	elseif name == "playlist-count" then
