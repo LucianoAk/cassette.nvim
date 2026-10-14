@@ -1,8 +1,8 @@
 local PlayerManager = require("cassette.players.manager")
 
-local ui = {}
+local statusline = {}
 
-ui.cache = {}
+statusline.cache = {}
 
 local function _getPlatformIcon(url)
 	if url:match("youtube%.com") or url:match("youtu%.be") then
@@ -22,21 +22,25 @@ end
 -- add configuration for ui status line where if false it doesn't update status line
 -- add configuration for ui status line where if false the status line dissapears when no player in foucs
 -- update ui on pause property change to make icon 󰏤, 󰏥, 󰏧 or 󰏦
-function ui.getStatusLine()
-	if ui.cache.playlist_count and ui.cache.playlist_count > 1 then
+function statusline.getStatusLine()
+	if statusline.cache.playlist_count and statusline.cache.playlist_count > 1 then
 		return string.format(
 			"%s Playing: [ %s ] %d/%d",
-			_getPlatformIcon(ui.cache.path),
-			ui.cache.mediaTitle,
-			ui.cache.playlist_pos + 1,
-			ui.cache.playlist_count
+			_getPlatformIcon(statusline.cache.path),
+			statusline.cache.mediaTitle,
+			statusline.cache.playlist_pos + 1,
+			statusline.cache.playlist_count
 		)
 	end
-	return string.format("%s Playing: [ %s ]", _getPlatformIcon(ui.cache.path or ""), ui.cache.mediaTitle or "")
+	return string.format(
+		"%s Playing: [ %s ]",
+		_getPlatformIcon(statusline.cache.path or ""),
+		statusline.cache.mediaTitle or ""
+	)
 end
 
-function ui.updateCache()
-	ui.cache = {
+function statusline.updateCache()
+	statusline.cache = {
 		mediaTitle = PlayerManager.focus.title or "?",
 		path = PlayerManager.focus.path or "?",
 		playlist_pos = PlayerManager.focus.playlist_pos or "?",
@@ -44,8 +48,8 @@ function ui.updateCache()
 	}
 end
 
-function ui.cleanCache()
-	ui.cache = {
+function statusline.cleanCache()
+	statusline.cache = {
 		mediaTitle = "",
 		path = "",
 		playlist_pos = 0,
@@ -53,4 +57,4 @@ function ui.cleanCache()
 	}
 end
 
-return ui
+return statusline
