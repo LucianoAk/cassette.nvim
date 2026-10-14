@@ -202,11 +202,6 @@ function MpvBuilder.restore(socket)
 	self._process = { pid = get_prop("pid") }
 	self._connection = connection
 
-	Executor.watch_pid(self._process.pid, function(pid)
-		Handler.end_process(self, require("cassette.players.manager").running_players)
-		Logger.info(MODULE_ORIGIN, "Stopped player PID: " .. pid)
-	end)
-
 	if err then
 		self.err = Logger.build_err(err.origin, err.message)
 		return self
