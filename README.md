@@ -27,6 +27,12 @@ _Note: support for other media players and extractors may be added later_
     -- if no flags are provided the plugin will append '-%hrtime' to the end of the provided string
 		socket_name_template = "mpv-socket-%nanoid", -- '%uuid', '%nanoid', '%hrtime'
 	},
+	ui = {
+		statusline = {
+      -- when no player are running statusline will be hidden if this option is 'true'
+			hide_no_players = true,
+		},
+	},
 	session = {
     -- if this is 'true' the plugin will not close any of the running players on exit, and will search for running players on start
 		persist = true,
