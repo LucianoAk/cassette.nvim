@@ -1,4 +1,4 @@
-local cassette = {}
+local Cassette = {}
 
 local PlayerManager = require("cassette.players.manager")
 local MpvPlayer = require("cassette.players.mpv")
@@ -8,7 +8,7 @@ local Popup = require("cassette.ui.popup")
 local Config = require("cassette.config")
 local Autocmd = require("cassette.autocmd")
 
-function cassette.setup(user_opts)
+function Cassette.setup(user_opts)
 	Config.setup(user_opts)
 	PlayerManager.setup(Config.options.player)
 	Autocmd.setup(Config.options.session)
@@ -22,7 +22,7 @@ function cassette.setup(user_opts)
 	end
 end
 
-function cassette.startVideo(path)
+function Cassette.startVideo(path)
 	local video_player, err = MpvPlayer.builder()
 		:path(path)
 		:video(true)
@@ -39,7 +39,7 @@ function cassette.startVideo(path)
 	PlayerManager.add(video_player)
 end
 
-function cassette.startMusic(path)
+function Cassette.startMusic(path)
 	local music_player, err = MpvPlayer.builder()
 		:path(path)
 		:video(false)
@@ -56,31 +56,31 @@ function cassette.startMusic(path)
 	PlayerManager.add(music_player)
 end
 
-function cassette.load(path)
+function Cassette.load(path)
 	PlayerManager.load(path)
 end
 
-function cassette.stop()
+function Cassette.stop()
 	PlayerManager.stop()
 end
 
-function cassette.seek(time)
+function Cassette.seek(time)
 	PlayerManager.seek(time)
 end
 
-function cassette.next()
+function Cassette.next()
 	PlayerManager.next()
 end
 
-function cassette.previous()
+function Cassette.previous()
 	PlayerManager.previous()
 end
 
-function cassette.toggle_playback()
+function Cassette.toggle_playback()
 	PlayerManager.toggle_playback()
 end
 
-function cassette.focus()
+function Cassette.focus()
 	Popup.show_player_picker(PlayerManager.running_players, function(p)
 		return string.format("▶ Player: %s", p.title or "")
 	end, function(choice, index)
@@ -95,8 +95,8 @@ function cassette.focus()
 	end)
 end
 
-function cassette.getUIStatusLine()
+function Cassette.getUIStatusLine()
 	return Statusline.getStatusLine()
 end
 
-return cassette
+return Cassette
