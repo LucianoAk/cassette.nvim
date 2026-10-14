@@ -28,6 +28,9 @@ end
 -- add configuration for ui status line where if false the status line dissapears when no player in foucs
 -- update ui on pause property change to make icon 󰏤, 󰏥, 󰏧 or 󰏦
 function Statusline.get()
+	if Statusline.opts.hide_no_players and #PlayerManager.running_players == 0 then
+		return ""
+	end
 	if Statusline.cache.playlist_count and Statusline.cache.playlist_count > 1 then
 		return string.format(
 			"%s Playing: [ %s ] %d/%d",
