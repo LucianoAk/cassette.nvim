@@ -22,7 +22,7 @@ end
 -- add configuration for ui status line where if false it doesn't update status line
 -- add configuration for ui status line where if false the status line dissapears when no player in foucs
 -- update ui on pause property change to make icon 󰏤, 󰏥, 󰏧 or 󰏦
-function Statusline.getStatusLine()
+function Statusline.get()
 	if Statusline.cache.playlist_count and Statusline.cache.playlist_count > 1 then
 		return string.format(
 			"%s Playing: [ %s ] %d/%d",
