@@ -3,7 +3,8 @@ local cassette = {}
 local player_manager = require("cassette.players.manager")
 local mpv_player = require("cassette.players.mpv")
 local logger = require("cassette.utils.logger")
-local ui = require("cassette.ui.ui")
+local statusline = require("cassette.ui.statusline")
+local popup = require("cassette.ui.popup")
 local config = require("cassette.config")
 local autocmd = require("cassette.autocmd")
 
@@ -82,7 +83,7 @@ function cassette.toggle_playback()
 end
 
 function cassette.focus()
-	ui.show_player_picker(player_manager.running_players, function(p)
+	popup.show_player_picker(player_manager.running_players, function(p)
 		return string.format("▶ Player: %s", p.title or "")
 	end, function(choice, index)
 		if choice then
@@ -97,7 +98,7 @@ function cassette.focus()
 end
 
 function cassette.getUIStatusLine()
-	return ui.getStatusLine()
+	return statusline.getStatusLine()
 end
 
 return cassette
