@@ -34,6 +34,15 @@ config.defaults = {
 					type = "text",
 					value = "Playing: ",
 				},
+				{
+					type = "title",
+					format = "[ %s ]", -- Template string wrapping the title (uses %s). If omitted, inserts text directly
+					max_length = -1, -- Max visible characters. Negative turns it off
+					indicator = { before = "...", after = "..." }, -- Strings attached to edges when text is clipped or scrolling
+					scroll_speed = 0, -- Timer interval in ms. 0 turns off scrolling
+					jump = 1, -- Number of characters skipped per tick. Positive scrolls forward, negative scrolls backward
+					spacer = " | ", -- Transition bridge string used when the marquee loops from the end back to the start
+				},
 			},
 		},
 	},
