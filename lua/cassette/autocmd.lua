@@ -10,7 +10,6 @@ function autocmd.setup(autocmd_configs)
 
 	local player_field_group = vim.api.nvim_create_augroup("CassettePlayerFields", { clear = true })
 
-	-- TODO: pass player to autocmd instead of using focus everytime
 	vim.api.nvim_create_autocmd("User", {
 		group = player_field_group,
 		pattern = "SyncPlayerFields",
