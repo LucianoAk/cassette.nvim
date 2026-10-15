@@ -40,7 +40,7 @@ end
 local function _render_text(section)
 	local value = section.value
 	if not value then
-		Logger.warn(MODULE_ORIGIN, "could not render icon section, no property data specified")
+		Logger.warn(MODULE_ORIGIN, "could not render 'text' section, no property data specified")
 		return ""
 	end
 	return value
