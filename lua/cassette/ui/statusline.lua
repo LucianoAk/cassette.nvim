@@ -1,24 +1,40 @@
 local PlayerManager = require("cassette.players.manager")
+local Logger = require("cassette.utils.logger")
 
 local Statusline = {}
 
 Statusline.opts = {}
 
+local MODULE_ORIGIN = "Status Line"
+
 function Statusline.setup(statusline_configs)
 	Statusline.opts = statusline_configs or {}
 end
 
-local function _getPlatformIcon(url)
-	if PlayerManager.focus.pause and PlayerManager.focus.pause == true then
-		return "󰏤"
-	elseif url:match("youtube%.com") or url:match("youtu%.be") then
-		return "󰗃"
-	elseif url:match("twitch%.tv") then
-		return "󰕃"
-	elseif url:match("spotify%.com") then
-		return "󰓇"
-	else
-		return "▶"
+local function _format_icon(section, data)
+	local property = data[section.property] or " "
+	local format = section.format
+	local patterns = section.patterns
+
+	if not property then
+		Logger.warn(MODULE_ORIGIN, "could not render icon section, no property data specified")
+		return
+	end
+
+	for _, pattern in ipairs(patterns) do
+		local match = pattern.match
+		local icon = pattern.icon
+		local condition = pattern.condition or function(d)
+			return true
+		end
+		-- vim.notify("match: " .. match .. "\nproperty: " .. property .. "\nresult: " .. tostring(property:match(match)))
+
+		if property:match(match) and condition(data) then
+			if format then
+				return string.format(format, icon)
+			end
+			return icon
+		end
 	end
 end
 
@@ -30,17 +46,16 @@ function Statusline.get()
 		return ""
 	end
 
-	local player = PlayerManager.focus
-	if player and player.playlist_count and player.playlist_count > 1 then
-		return string.format(
-			"%s Playing: [ %s ] %d/%d",
-			_getPlatformIcon(player.path),
-			player.title,
-			player.playlist_pos + 1,
-			player.playlist_count
-		)
+	local result_parts = {}
+	local data = PlayerManager.focus or {}
+
+	for _, section in ipairs(Statusline.opts.sections) do
+		if section.type == "icon" then
+			table.insert(result_parts, _format_icon(section, data))
+		end
 	end
-	return string.format("%s Playing: [ %s ]", _getPlatformIcon(player.path or ""), player.title or "")
+
+	return table.concat(result_parts, Statusline.opts.section_separator or "")
 end
 
 return Statusline

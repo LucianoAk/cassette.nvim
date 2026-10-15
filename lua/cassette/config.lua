@@ -10,6 +10,27 @@ config.defaults = {
 	ui = {
 		statusline = {
 			hide_no_players = true,
+			section_separator = "a",
+			sections = {
+				{
+					type = "icon",
+					format = "[%s]",
+					property = "path", -- define the data that will be used for the check
+					patterns = { -- order gives priority
+						{
+							match = ".*",
+							icon = "󰏤",
+							condition = function(d)
+								return d.pause == true
+							end,
+						},
+						{ match = "youtube%.com", icon = "󰗃" },
+						{ match = "youtu%.be", icon = "󰗃" },
+						{ match = "twitch%.tv", icon = "󰕃" },
+						{ match = ".*", icon = "▶" },
+					},
+				},
+			},
 		},
 	},
 	session = {
