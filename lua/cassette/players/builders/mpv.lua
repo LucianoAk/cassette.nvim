@@ -159,7 +159,7 @@ function MpvBuilder:connection()
 end
 
 function MpvBuilder.restore(socket)
-	local self
+	local self = MpvBuilder.new()
 	local connection, err
 	connection, err = IpcConnection.new(socket, function(msg)
 		Handler.ipc_message(connection, msg, self._id)
@@ -188,8 +188,7 @@ function MpvBuilder.restore(socket)
 		return res and res.data or nil
 	end
 
-	self = MpvBuilder.new()
-		:path(get_prop("path"))
+	self:path(get_prop("path"))
 		:title(get_prop("media-title"))
 		:video(not not get_prop("video"))
 		:volume(get_prop("volume"))
