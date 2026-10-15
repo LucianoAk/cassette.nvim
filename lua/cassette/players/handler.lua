@@ -1,7 +1,7 @@
 local MpvHandler = {}
 MpvHandler.__index = MpvHandler
 
-function MpvHandler.ipc_message(connection, msg)
+function MpvHandler.ipc_message(connection, msg, id)
 	local event_map = {
 		["file-loaded"] = { "SyncPlayerFields" },
 		pause = { "SyncPlayerPause" },
@@ -18,7 +18,7 @@ function MpvHandler.ipc_message(connection, msg)
 	if trigger_events then
 		vim.schedule(function()
 			for _, event in ipairs(trigger_events) do
-				vim.api.nvim_exec_autocmds("User", { pattern = event })
+				vim.api.nvim_exec_autocmds("User", { pattern = event, data = { player_id = id } })
 			end
 		end)
 	end

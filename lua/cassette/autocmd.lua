@@ -14,16 +14,26 @@ function autocmd.setup(autocmd_configs)
 	vim.api.nvim_create_autocmd("User", {
 		group = player_field_group,
 		pattern = "SyncPlayerFields",
-		callback = function()
-			PlayerManager.focus:sync()
+		callback = function(args)
+			local player_id = args.data and args.data.player_id
+			local player = PlayerManager.running_players[player_id]
+			if not player then
+				return
+			end
+			player:sync()
 		end,
 	})
 
 	vim.api.nvim_create_autocmd("User", {
 		group = player_field_group,
 		pattern = "SyncPlayerPause",
-		callback = function()
-			PlayerManager.focus:sync_field("pause")
+		callback = function(args)
+			local player_id = args.data and args.data.player_id
+			local player = PlayerManager.running_players[player_id]
+			if not player then
+				return
+			end
+			player:sync_field("pause")
 		end,
 	})
 

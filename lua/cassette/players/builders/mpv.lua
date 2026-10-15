@@ -132,7 +132,7 @@ function MpvBuilder:connection()
 
 	local connection, err
 	connection, err = IpcConnection.new(self._socket, function(msg)
-		Handler.ipc_message(connection, msg)
+		Handler.ipc_message(connection, msg, self._id)
 	end)
 
 	if err then
@@ -162,7 +162,7 @@ function MpvBuilder.restore(socket)
 	local self
 	local connection, err
 	connection, err = IpcConnection.new(socket, function(msg)
-		Handler.ipc_message(connection, msg)
+		Handler.ipc_message(connection, msg, self._id)
 	end)
 
 	if err then
