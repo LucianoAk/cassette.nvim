@@ -11,13 +11,13 @@ function Statusline.setup(statusline_configs)
 	Statusline.opts = statusline_configs or {}
 end
 
-local function _format_icon(section, data)
+local function _render_icon(section, data)
 	local property = data[section.property] or " "
 	local format = section.format
 	local patterns = section.patterns
 
 	if not property then
-		Logger.warn(MODULE_ORIGIN, "could not render icon section, no property data specified")
+		Logger.warn(MODULE_ORIGIN, "could not render 'icon' section, no property data specified")
 		return
 	end
 
@@ -49,8 +49,9 @@ function Statusline.get()
 	local data = PlayerManager.focus or {}
 
 	for _, section in ipairs(Statusline.opts.sections) do
-		if section.type == "icon" then
-			table.insert(result_parts, _format_icon(section, data))
+		local type = section.type
+		if type == "icon" then
+			table.insert(result_parts, _render_icon(section, data))
 		end
 	end
 
