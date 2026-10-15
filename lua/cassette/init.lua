@@ -84,16 +84,16 @@ function Cassette.toggle_playback()
 end
 
 function Cassette.focus()
-	Popup.show_player_picker(PlayerManager.running_players, function(p)
+	local player_select_list = {}
+	for _, p in pairs(PlayerManager.running_players) do
+		table.insert(player_select_list, p)
+	end
+
+	Popup.show_player_picker(player_select_list, function(p)
 		return string.format("▶ Player: %s", p.title or "")
-	end, function(choice, index)
+	end, function(choice)
 		if choice then
-			PlayerManager.change_focus(index)
-			vim.schedule(function()
-				vim.api.nvim_exec_autocmds("User", {
-					pattern = "UpdateUICache",
-				})
-			end)
+			PlayerManager.change_focus(choice.id)
 		end
 	end)
 end

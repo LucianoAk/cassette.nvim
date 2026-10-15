@@ -28,12 +28,7 @@ function MpvHandler.end_process(player, list, focus)
 	if player == focus then
 		focus = nil
 	end
-	for index, p in ipairs(list) do
-		if p == player then
-			os.remove(player.socket)
-			table.remove(list, index)
-		end
-	end
+	list[player.id] = nil
 end
 
 return MpvHandler

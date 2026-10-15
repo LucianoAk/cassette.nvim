@@ -4,9 +4,9 @@ function Popup.show_player_picker(list, formatter, on_select)
 	vim.ui.select(list, {
 		prompt = "Select a Player:",
 		format_item = formatter,
-	}, function(choice, index)
+	}, function(choice)
 		if on_select then
-			on_select(choice, index)
+			on_select(choice)
 		end
 	end)
 end
