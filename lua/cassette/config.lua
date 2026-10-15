@@ -10,7 +10,7 @@ config.defaults = {
 	ui = {
 		statusline = {
 			hide_no_players = true,
-			section_separator = "a",
+			section_separator = " ",
 			sections = {
 				{
 					type = "icon",
