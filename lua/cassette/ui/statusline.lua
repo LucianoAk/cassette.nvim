@@ -46,6 +46,67 @@ local function _render_text(section)
 	return value
 end
 
+local active_timers = {}
+local offsets = {}
+
+local function _render_title(section, data)
+	local title = data.title or ""
+	local max_length = section.max_length or #title
+
+	if max_length < 0 then
+		return section.format and string.format(section.format, title) or title
+	end
+
+	local ind = section.indicator or {}
+	local before, after = ind.before or "", ind.after or ""
+	local scroll_speed = section.scroll_speed or 0
+	local jump = section.jump or 1
+	local spacer = section.spacer or " "
+
+	local result
+	if #title <= max_length then
+		result = title
+	elseif scroll_speed == 0 then
+		result = title:sub(1, max_length) .. after
+	else
+		local padded = title .. spacer
+		local plen = #padded
+		offsets[title] = offsets[title] or (jump < 0 and plen or 1)
+
+		if not active_timers[title] then
+			active_timers[title] = vim.uv.new_timer()
+			active_timers[title]:start(
+				0,
+				math.abs(scroll_speed),
+				vim.schedule_wrap(function()
+					if #title > max_length then
+						offsets[title] = ((offsets[title] + jump - 1) % plen) + 1
+						vim.cmd.redrawstatus()
+					end
+				end)
+			)
+		end
+
+		local offset = offsets[title]
+		if offset + max_length - 1 <= #title then
+			result = title:sub(offset, offset + max_length - 1)
+		else
+			local p1 = title:sub(offset)
+			local rem = max_length - #p1
+			result = rem <= #spacer and (p1 .. spacer:sub(1, rem)) or (p1 .. spacer .. title:sub(1, rem - #spacer))
+		end
+
+		if before ~= "" then
+			result = before .. result
+		end
+		if after ~= "" then
+			result = result .. after
+		end
+	end
+
+	return section.format and string.format(section.format, result) or result
+end
+
 -- TODO:
 -- create a ui configuration to define the structure of the status line using a sections table
 -- add duration section by taking the time-pos property, adding to it every second and syncing every 30 second
@@ -63,6 +124,8 @@ function Statusline.get()
 			table.insert(result_parts, _render_icon(section, data))
 		elseif type == "text" then
 			table.insert(result_parts, _render_text(section))
+		elseif type == "title" then
+			table.insert(result_parts, _render_title(section, data))
 		end
 	end
 
