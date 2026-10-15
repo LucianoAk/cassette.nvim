@@ -14,7 +14,7 @@ config.defaults = {
 			sections = {
 				{
 					type = "icon",
-					format = "[%s]",
+					format = "%s", -- if not specified it will just insert the data
 					property = "path", -- define the data that will be used for the check
 					patterns = { -- order gives priority
 						{

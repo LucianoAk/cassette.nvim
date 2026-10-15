@@ -27,7 +27,6 @@ local function _format_icon(section, data)
 		local condition = pattern.condition or function(d)
 			return true
 		end
-		-- vim.notify("match: " .. match .. "\nproperty: " .. property .. "\nresult: " .. tostring(property:match(match)))
 
 		if property:match(match) and condition(data) then
 			if format then
