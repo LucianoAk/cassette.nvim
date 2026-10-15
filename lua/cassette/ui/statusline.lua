@@ -37,6 +37,15 @@ local function _render_icon(section, data)
 	end
 end
 
+local function _render_text(section)
+	local value = section.value
+	if not value then
+		Logger.warn(MODULE_ORIGIN, "could not render icon section, no property data specified")
+		return ""
+	end
+	return value
+end
+
 -- TODO:
 -- create a ui configuration to define the structure of the status line using a sections table
 -- add duration section by taking the time-pos property, adding to it every second and syncing every 30 second
@@ -52,6 +61,8 @@ function Statusline.get()
 		local type = section.type
 		if type == "icon" then
 			table.insert(result_parts, _render_icon(section, data))
+		elseif type == "text" then
+			table.insert(result_parts, _render_text(section))
 		end
 	end
 

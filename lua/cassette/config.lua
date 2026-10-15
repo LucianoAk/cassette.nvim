@@ -30,6 +30,10 @@ config.defaults = {
 						{ match = ".*", icon = "▶" },
 					},
 				},
+				{
+					type = "text",
+					value = "Playing: ",
+				},
 			},
 		},
 	},
