@@ -1,3 +1,5 @@
+local Identifier = require("cassette.utils.identifier")
+
 local PlayerBuilder = {}
 PlayerBuilder.__index = PlayerBuilder
 
@@ -9,6 +11,7 @@ end
 function PlayerBuilder.new()
 	local self = setmetatable({}, PlayerBuilder)
 
+	self._id = Identifier.uuid()
 	self._path = ""
 	self._video = true
 	self._volume = PlayerBuilder.opts.default_volume or 100

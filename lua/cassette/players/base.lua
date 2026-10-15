@@ -1,5 +1,4 @@
 local BaseBuilder = require("cassette.players.builders.base")
-local Identifier = require("cassette.utils.identifier")
 
 local BasePlayer = {}
 BasePlayer.__index = BasePlayer
@@ -7,7 +6,7 @@ BasePlayer.__index = BasePlayer
 function BasePlayer.new(builder)
 	local self = setmetatable({}, BasePlayer)
 
-	self.id = Identifier.uuid()
+	self.id = builder._id
 	self.path = builder._path
 	self.video = builder._video
 	self.volume = builder._volume
