@@ -29,7 +29,7 @@ _Note: support for other media players and extractors may be added later_
 	},
 	ui = {
 		statusline = {
-      -- when no player are running statusline will be hidden if this option is 'true'
+      -- when no player is focused statusline will be hidden if this option is 'true'
 			hide_no_players = true,
 		},
 	},
