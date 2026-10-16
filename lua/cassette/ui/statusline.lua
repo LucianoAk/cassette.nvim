@@ -191,8 +191,6 @@ local function _render_time(section, data)
 	return string.format(fmt, t_str, d_str)
 end
 
--- TODO:
--- add duration section by taking the time-pos property, adding to it every second and syncing every 30 second
 function Statusline.get()
 	if Statusline.opts.hide_no_players and PlayerManager.length() == 0 then
 		return ""
