@@ -111,6 +111,25 @@ local function _render_title(section, data)
 	return format and string.format(format, result) or result
 end
 
+local function _render_playlist(section, data)
+	local format = section.format
+	local pos = data.playlist_pos or section.fallback
+	local count = data.playlist_count or section.fallback
+
+	if not format then
+		Logger.warn(MODULE_ORIGIN, "could not render 'playlist' section, no format configuration specified")
+		return ""
+	end
+	if not pos or not count then
+		Logger.warn(
+			MODULE_ORIGIN,
+			"could not render 'playlist' section, no property data specified or no fallback defined"
+		)
+		return ""
+	end
+	return string.format(format, data.playlist_pos, data.playlist_count)
+end
+
 -- TODO:
 -- add duration section by taking the time-pos property, adding to it every second and syncing every 30 second
 function Statusline.get()
@@ -132,6 +151,8 @@ function Statusline.get()
 				table.insert(result_parts, _render_text(section))
 			elseif type == "title" then
 				table.insert(result_parts, _render_title(section, data))
+			elseif type == "playlist" then
+				table.insert(result_parts, _render_playlist(section, data))
 			end
 		end
 	end
