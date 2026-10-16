@@ -55,9 +55,10 @@ local offsets = {}
 local function _render_title(section, data)
 	local title = data.title or ""
 	local max_length = section.max_length or #title
+	local format = section.format
 
 	if max_length < 0 then
-		return section.format and string.format(section.format, title) or title
+		return format and string.format(format, title) or title
 	end
 
 	local ind = section.indicator or {}
@@ -107,7 +108,7 @@ local function _render_title(section, data)
 		end
 	end
 
-	return section.format and string.format(section.format, result) or result
+	return format and string.format(format, result) or result
 end
 
 -- TODO:
