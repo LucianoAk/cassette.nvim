@@ -44,18 +44,18 @@ config.defaults = {
 					spacer = " | ", -- Transition bridge string used when the marquee loops from the end back to the start
 				},
 				{
+					type = "time",
+					format = "<%s/%s>",
+					separator = ":",
+					sync_cycle = 10,
+				},
+				{
 					type = "playlist",
 					format = "%d of %d",
 					fallback = 0,
 					condition = function(d)
 						return d.playlist_count and d.playlist_count > 1 or false
 					end,
-				},
-				{
-					type = "time",
-					format = "%s/%s",
-					separator = ":",
-					sync_cycle = 10,
 				},
 			},
 		},
