@@ -50,8 +50,6 @@ local function _render_text(section)
 	return value
 end
 
-local offsets = {}
-
 local function _render_title(section, data)
 	local title = data.title or ""
 	local max_length = section.max_length or #title
@@ -75,23 +73,27 @@ local function _render_title(section, data)
 	else
 		local padded = title .. spacer
 		local plen = #padded
-		offsets[title] = offsets[title] or (jump < 0 and plen or 1)
 
-		if not Statusline.timer.text[title] then
-			Statusline.timer.text[title] = vim.uv.new_timer()
-			Statusline.timer.text[title]:start(
+		local text_timer = Statusline.timer.text[title]
+		if not text_timer then
+			text_timer = {
+				offset = jump < 0 and plen or 1,
+			}
+			text_timer.handle = vim.uv.new_timer()
+			text_timer.handle:start(
 				0,
 				math.abs(scroll_speed),
 				vim.schedule_wrap(function()
 					if #title > max_length then
-						offsets[title] = ((offsets[title] + jump - 1) % plen) + 1
+						text_timer.offset = ((text_timer.offset + jump - 1) % plen) + 1
 						vim.cmd.redrawstatus()
 					end
 				end)
 			)
+			Statusline.timer.text[title] = text_timer
 		end
 
-		local offset = offsets[title]
+		local offset = text_timer.offset
 		if offset + max_length - 1 <= #title then
 			result = title:sub(offset, offset + max_length - 1)
 		else
@@ -130,40 +132,48 @@ local function _render_playlist(section, data)
 	return string.format(format, data.playlist_pos, data.playlist_count)
 end
 
-local current_time_pos = {}
-local sync_counter = {}
-local last_duration = nil
-local dur_hours, dur_minutes, dur_secs = 0, 0, 0
-
 local function _render_time(section, data)
 	local id, cycle = data.id, section.sync_cycle
 
-	if not current_time_pos[id] or sync_counter[id] >= cycle then
-		sync_counter[id] = 0
+	local time_timer = Statusline.timer.time[id]
+	if not time_timer then
+		time_timer = {
+			current_time_pos = 0,
+			sync_counter = 0,
+			last_duration = nil,
+			dur_hours = 0,
+			dur_minutes = 0,
+			dur_secs = 0,
+		}
+		Statusline.timer.time[id] = time_timer
+	end
+
+	if not time_timer.current_time_pos or time_timer.sync_counter >= cycle then
+		time_timer.sync_counter = 0
 		vim.api.nvim_exec_autocmds("User", { pattern = "SyncPlayerTime", data = { player_id = id } })
 		if type(data.time_pos) == "number" then
-			current_time_pos[id] = data.time_pos
+			time_timer.current_time_pos = data.time_pos
 		end
 	end
 
-	local pos = current_time_pos[id] or 0
-	current_time_pos[id] = pos
+	local pos = time_timer.current_time_pos or 0
+	time_timer.current_time_pos = pos
 
-	if not Statusline.timer.time[id] then
-		Statusline.timer.time[id] = vim.uv.new_timer()
-		if not Statusline.timer.time[id] then
+	if not time_timer.handle then
+		time_timer.handle = vim.uv.new_timer()
+		if not time_timer.handle then
 			Logger.warn(MODULE_ORIGIN, "could not render 'time' section, no sync timer could not be created")
 			return ""
 		end
 
-		Statusline.timer.time[id]:start(
+		time_timer.handle:start(
 			1000,
 			1000,
 			vim.schedule_wrap(function()
-				if not data.pause and type(current_time_pos[id]) == "number" then
-					current_time_pos[id] = current_time_pos[id] + 1
+				if not data.pause and type(time_timer.current_time_pos) == "number" then
+					time_timer.current_time_pos = time_timer.current_time_pos + 1
 				end
-				sync_counter[id] = sync_counter[id] + 1
+				time_timer.sync_counter = time_timer.sync_counter + 1
 				vim.cmd.redrawstatus()
 			end)
 		)
@@ -173,18 +183,21 @@ local function _render_time(section, data)
 	local th, tm, ts = math.floor(pos / 3600), math.floor((pos % 3600) / 60), math.floor(pos % 60)
 
 	local dur = data.duration or 0
-	if dur ~= last_duration then
-		last_duration, dur_hours, dur_minutes, dur_secs =
-			dur, math.floor(dur / 3600), math.floor((dur % 3600) / 60), math.floor(dur % 60)
+	if dur ~= time_timer.last_duration then
+		time_timer.last_duration = dur
+		time_timer.dur_hours = math.floor(dur / 3600)
+		time_timer.dur_minutes = math.floor((dur % 3600) / 60)
+		time_timer.dur_secs = math.floor(dur % 60)
 	end
 
 	local t_str, d_str
-	if th > 0 or dur_hours > 0 then
+	if th > 0 or time_timer.dur_hours > 0 then
 		t_str = string.format("%d%s%02d%s%02d", th, sep, tm, sep, ts)
-		d_str = string.format("%d%s%02d%s%02d", dur_hours, sep, dur_minutes, sep, dur_secs)
+		d_str =
+			string.format("%d%s%02d%s%02d", time_timer.dur_hours, sep, time_timer.dur_minutes, sep, time_timer.dur_secs)
 	else
 		t_str = string.format("%02d%s%02d", tm, sep, ts)
-		d_str = string.format("%02d%s%02d", dur_minutes, sep, dur_secs)
+		d_str = string.format("%02d%s%02d", time_timer.dur_minutes, sep, time_timer.dur_secs)
 	end
 
 	return string.format(fmt, t_str, d_str)
