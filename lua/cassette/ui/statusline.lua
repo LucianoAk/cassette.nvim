@@ -4,6 +4,10 @@ local Logger = require("cassette.utils.logger")
 local Statusline = {}
 
 Statusline.opts = {}
+Statusline.timer = {
+	text = {},
+	time = {},
+}
 
 local MODULE_ORIGIN = "Status Line"
 
@@ -46,7 +50,6 @@ local function _render_text(section)
 	return value
 end
 
-local active_timers = {}
 local offsets = {}
 
 local function _render_title(section, data)
@@ -74,9 +77,9 @@ local function _render_title(section, data)
 		local plen = #padded
 		offsets[title] = offsets[title] or (jump < 0 and plen or 1)
 
-		if not active_timers[title] then
-			active_timers[title] = vim.uv.new_timer()
-			active_timers[title]:start(
+		if not Statusline.timer.text[title] then
+			Statusline.timer.text[title] = vim.uv.new_timer()
+			Statusline.timer.text[title]:start(
 				0,
 				math.abs(scroll_speed),
 				vim.schedule_wrap(function()
@@ -127,7 +130,6 @@ local function _render_playlist(section, data)
 	return string.format(format, data.playlist_pos, data.playlist_count)
 end
 
-local timer = {}
 local current_time_pos = {}
 local sync_counter = {}
 local last_duration = nil
@@ -147,14 +149,14 @@ local function _render_time(section, data)
 	local pos = current_time_pos[id] or 0
 	current_time_pos[id] = pos
 
-	if not timer[id] then
-		timer[id] = vim.uv.new_timer()
-		if not timer[id] then
+	if not Statusline.timer.time[id] then
+		Statusline.timer.time[id] = vim.uv.new_timer()
+		if not Statusline.timer.time[id] then
 			Logger.warn(MODULE_ORIGIN, "could not render 'time' section, no sync timer could not be created")
 			return ""
 		end
 
-		timer[id]:start(
+		Statusline.timer.time[id]:start(
 			1000,
 			1000,
 			vim.schedule_wrap(function()
