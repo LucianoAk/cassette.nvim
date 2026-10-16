@@ -1,7 +1,6 @@
 local Cassette = require("cassette")
 Cassette.setup()
 
--- TODO: fix the error with path with spaces in name
 vim.api.nvim_create_user_command("VideoCassetteStart", function(opts)
 	Cassette.startVideo(opts.args)
 end, {
