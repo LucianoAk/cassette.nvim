@@ -11,7 +11,6 @@ function Statusline.setup(statusline_configs)
 	Statusline.opts = statusline_configs or {}
 end
 
--- TODO: add support for condition config
 local function _render_icon(section, data)
 	local property = data[section.property] or " "
 	local format = section.format
@@ -38,7 +37,6 @@ local function _render_icon(section, data)
 	end
 end
 
--- TODO: add support for condition config
 local function _render_text(section)
 	local value = section.value
 	if not value then
@@ -51,7 +49,6 @@ end
 local active_timers = {}
 local offsets = {}
 
--- TODO: add support for condition config
 local function _render_title(section, data)
 	local title = data.title or ""
 	local max_length = section.max_length or #title
