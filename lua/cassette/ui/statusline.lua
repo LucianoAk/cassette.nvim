@@ -5,7 +5,7 @@ local Executor = require("cassette.utils.executor")
 local Statusline = {}
 
 Statusline.opts = {}
-Statusline.timer = {
+local timer = {
 	text = {},
 	time = {},
 }
@@ -75,7 +75,7 @@ local function _render_title(section, data)
 		local padded = title .. spacer
 		local plen = #padded
 
-		local text_timer = Statusline.timer.text[title]
+		local text_timer = timer.text[title]
 		if not text_timer then
 			text_timer = {
 				offset = jump < 0 and plen or 1,
@@ -101,7 +101,7 @@ local function _render_title(section, data)
 				Logger.build_err(err.origin, err.message)
 			end
 
-			Statusline.timer.text[title] = text_timer
+			timer.text[title] = text_timer
 		end
 
 		local offset = text_timer.offset
@@ -146,7 +146,7 @@ end
 local function _render_time(section, data)
 	local id, cycle = data.id, section.sync_cycle
 
-	local time_timer = Statusline.timer.time[id]
+	local time_timer = timer.time[id]
 	if not time_timer then
 		time_timer = {
 			current_time_pos = 0,
@@ -156,7 +156,7 @@ local function _render_time(section, data)
 			dur_minutes = 0,
 			dur_secs = 0,
 		}
-		Statusline.timer.time[id] = time_timer
+		timer.time[id] = time_timer
 	end
 
 	if not time_timer.current_time_pos or time_timer.sync_counter >= cycle then
