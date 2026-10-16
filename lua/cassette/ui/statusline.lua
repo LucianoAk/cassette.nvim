@@ -123,12 +123,16 @@ function Statusline.get()
 
 	for _, section in ipairs(Statusline.opts.sections) do
 		local type = section.type
-		if type == "icon" then
-			table.insert(result_parts, _render_icon(section, data))
-		elseif type == "text" then
-			table.insert(result_parts, _render_text(section))
-		elseif type == "title" then
-			table.insert(result_parts, _render_title(section, data))
+		local condition = section.condition
+
+		if not condition or condition(data) then
+			if type == "icon" then
+				table.insert(result_parts, _render_icon(section, data))
+			elseif type == "text" then
+				table.insert(result_parts, _render_text(section))
+			elseif type == "title" then
+				table.insert(result_parts, _render_title(section, data))
+			end
 		end
 	end
 
