@@ -51,6 +51,13 @@ config.defaults = {
 						return d.playlist_count and d.playlist_count > 1 or false
 					end,
 				},
+				{
+					type = "time",
+					format = "%s/%s",
+					number_format = "%0d",
+					separator = ":",
+					sync_cycle = 10,
+				},
 			},
 		},
 	},
