@@ -43,6 +43,14 @@ config.defaults = {
 					jump = 1, -- Number of characters skipped per tick. Positive scrolls forward, negative scrolls backward
 					spacer = " | ", -- Transition bridge string used when the marquee loops from the end back to the start
 				},
+				{
+					type = "playlist",
+					format = "%d of %d",
+					fallback = 0,
+					condition = function(d)
+						return d.playlist_count and d.playlist_count > 1 or false
+					end,
+				},
 			},
 		},
 	},
