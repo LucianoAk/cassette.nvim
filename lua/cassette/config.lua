@@ -54,7 +54,6 @@ config.defaults = {
 				{
 					type = "time",
 					format = "%s/%s",
-					number_format = "%0d",
 					separator = ":",
 					sync_cycle = 10,
 				},
