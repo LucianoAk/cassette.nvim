@@ -130,6 +130,67 @@ local function _render_playlist(section, data)
 	return string.format(format, data.playlist_pos, data.playlist_count)
 end
 
+local timer = {}
+local current_time_pos = {}
+local sync_counter = {}
+local last_duration = nil
+local dur_hours, dur_minutes, dur_secs = 0, 0, 0
+
+local function _render_time(section, data)
+	local id, cycle = data.id, section.sync_cycle
+
+	if not current_time_pos[id] or sync_counter[id] >= cycle then
+		sync_counter[id] = 0
+		vim.api.nvim_exec_autocmds("User", { pattern = "SyncPlayerTime", data = { player_id = id } })
+		if type(data.time_pos) == "number" then
+			current_time_pos[id] = data.time_pos
+		end
+	end
+
+	local pos = current_time_pos[id] or 0
+	current_time_pos[id] = pos
+
+	if not timer[id] then
+		timer[id] = vim.uv.new_timer()
+		if not timer[id] then
+			Logger.warn(MODULE_ORIGIN, "could not render 'time' section, no sync timer could not be created")
+			return ""
+		end
+
+		timer[id]:start(
+			1000,
+			1000,
+			vim.schedule_wrap(function()
+				if not data.pause and type(current_time_pos[id]) == "number" then
+					current_time_pos[id] = current_time_pos[id] + 1
+				end
+				sync_counter[id] = sync_counter[id] + 1
+				vim.cmd.redrawstatus()
+			end)
+		)
+	end
+
+	local sep, fmt = section.separator, section.format
+	local th, tm, ts = math.floor(pos / 3600), math.floor((pos % 3600) / 60), math.floor(pos % 60)
+
+	local dur = data.duration or 0
+	if dur ~= last_duration then
+		last_duration, dur_hours, dur_minutes, dur_secs =
+			dur, math.floor(dur / 3600), math.floor((dur % 3600) / 60), math.floor(dur % 60)
+	end
+
+	local t_str, d_str
+	if th > 0 or dur_hours > 0 then
+		t_str = string.format("%d%s%02d%s%02d", th, sep, tm, sep, ts)
+		d_str = string.format("%d%s%02d%s%02d", dur_hours, sep, dur_minutes, sep, dur_secs)
+	else
+		t_str = string.format("%02d%s%02d", tm, sep, ts)
+		d_str = string.format("%02d%s%02d", dur_minutes, sep, dur_secs)
+	end
+
+	return string.format(fmt, t_str, d_str)
+end
+
 -- TODO:
 -- add duration section by taking the time-pos property, adding to it every second and syncing every 30 second
 function Statusline.get()
@@ -153,6 +214,8 @@ function Statusline.get()
 				table.insert(result_parts, _render_title(section, data))
 			elseif type == "playlist" then
 				table.insert(result_parts, _render_playlist(section, data))
+			elseif type == "time" then
+				table.insert(result_parts, _render_time(section, data))
 			end
 		end
 	end
