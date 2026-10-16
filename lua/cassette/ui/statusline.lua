@@ -146,7 +146,6 @@ local function _render_time(section, data)
 	local time_timer = timer.time[id]
 	if not time_timer then
 		time_timer = {
-			current_time_pos = 0,
 			sync_counter = 0,
 			last_duration = nil,
 			dur_hours = 0,
@@ -156,16 +155,12 @@ local function _render_time(section, data)
 		timer.time[id] = time_timer
 	end
 
-	if not time_timer.current_time_pos or time_timer.sync_counter >= cycle then
+	time_timer.data = data
+
+	if not data.time_pos or time_timer.sync_counter >= cycle then
 		time_timer.sync_counter = 0
 		vim.api.nvim_exec_autocmds("User", { pattern = "SyncPlayerTime", data = { player_id = id } })
-		if type(data.time_pos) == "number" then
-			time_timer.current_time_pos = data.time_pos
-		end
 	end
-
-	local pos = time_timer.current_time_pos or 0
-	time_timer.current_time_pos = pos
 
 	if not time_timer.handle then
 		time_timer.handle = vim.uv.new_timer()
@@ -178,8 +173,9 @@ local function _render_time(section, data)
 			1000,
 			1000,
 			vim.schedule_wrap(function()
-				if not data.pause and type(time_timer.current_time_pos) == "number" then
-					time_timer.current_time_pos = time_timer.current_time_pos + 1
+				local active_data = time_timer.data
+				if active_data and not active_data.pause and type(active_data.time_pos) == "number" then
+					active_data.time_pos = active_data.time_pos + 1
 				end
 				time_timer.sync_counter = time_timer.sync_counter + 1
 				vim.cmd.redrawstatus()
@@ -196,6 +192,7 @@ local function _render_time(section, data)
 		end
 	end
 
+	local pos = data.time_pos
 	local sep, fmt = section.separator, section.format
 	local th, tm, ts = math.floor(pos / 3600), math.floor((pos % 3600) / 60), math.floor(pos % 60)
 
