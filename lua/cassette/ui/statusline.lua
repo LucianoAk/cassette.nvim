@@ -29,11 +29,8 @@ local function _render_icon(section, data)
 	for _, pattern in ipairs(patterns) do
 		local match = pattern.match
 		local icon = pattern.icon
-		local condition = pattern.condition or function(d)
-			return true
-		end
 
-		if property:match(match) and condition(data) then
+		if property:match(match) and (not pattern.condition or pattern.condition(data)) then
 			if format then
 				return string.format(format, icon)
 			end
