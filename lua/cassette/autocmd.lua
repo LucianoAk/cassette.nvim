@@ -36,6 +36,19 @@ function autocmd.setup(autocmd_configs)
 		end,
 	})
 
+	vim.api.nvim_create_autocmd("User", {
+		group = player_field_group,
+		pattern = "SyncPlayerTime",
+		callback = function(args)
+			local player_id = args.data and args.data.player_id
+			local player = PlayerManager.running_players[player_id]
+			if not player then
+				return
+			end
+			player:sync_field("time-pos")
+		end,
+	})
+
 	local plugin_cleanup_group = vim.api.nvim_create_augroup("CassetteCleanup", { clear = true })
 
 	vim.api.nvim_create_autocmd("VimLeavePre", {
