@@ -1,5 +1,6 @@
 local PlayerManager = require("cassette.players.manager")
 local Logger = require("cassette.utils.logger")
+local Executor = require("cassette.utils.executor")
 
 local Statusline = {}
 
@@ -90,6 +91,16 @@ local function _render_title(section, data)
 					end
 				end)
 			)
+			local _, err = Executor.watch_pid(data.process.pid, function()
+				text_timer.handle:stop()
+				text_timer.handle:close()
+				text_timer.handle = nil
+			end)
+
+			if err then
+				Logger.build_err(err.origin, err.message)
+			end
+
 			Statusline.timer.text[title] = text_timer
 		end
 
@@ -177,6 +188,15 @@ local function _render_time(section, data)
 				vim.cmd.redrawstatus()
 			end)
 		)
+		local _, err = Executor.watch_pid(data.process.pid, function()
+			time_timer.handle:stop()
+			time_timer.handle:close()
+			time_timer.handle = nil
+		end)
+
+		if err then
+			Logger.build_err(err.origin, err.message)
+		end
 	end
 
 	local sep, fmt = section.separator, section.format
