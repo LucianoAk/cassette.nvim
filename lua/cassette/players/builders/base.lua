@@ -64,6 +64,16 @@ function PlayerBuilder:playlist_count(playlist_count)
 	return self
 end
 
+function PlayerBuilder:time_pos(time_pos)
+	self._time_pos = time_pos
+	return self
+end
+
+function PlayerBuilder:duration(duration)
+	self._duration = duration
+	return self
+end
+
 function PlayerBuilder:build()
 	return require("cassette.players.base").new(self)
 end

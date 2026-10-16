@@ -196,6 +196,8 @@ function MpvBuilder.restore(socket)
 		:pause(not not get_prop("pause"))
 		:playlist_pos(get_prop("playlist-pos"))
 		:playlist_count(get_prop("playlist-count"))
+		:time_pos(get_prop("time_pos"))
+		:duration(get_prop("duration"))
 
 	self._socket = socket
 	self._process = { pid = get_prop("pid") }

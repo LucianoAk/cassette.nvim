@@ -57,6 +57,10 @@ function MpvPlayer:sync_field(name)
 		self.playlist_pos = get_prop("playlist-pos") or self.playlist_pos
 	elseif name == "playlist-count" then
 		self.playlist_count = get_prop("playlist-count") or self.playlist_count
+	elseif name == "time-pos" then
+		self.time_pos = get_prop("time-pos") or self.time_pos
+	elseif name == "duration" then
+		self.duration = get_prop("duration") or self.duration
 	end
 
 	return self
@@ -72,6 +76,8 @@ function MpvPlayer:sync()
 		"pause",
 		"playlist-pos",
 		"playlist-count",
+		"time-pos",
+		"duration",
 	}
 
 	for _, prop in ipairs(properties) do

@@ -15,6 +15,8 @@ function BasePlayer.new(builder)
 	self.title = builder._title
 	self.playlist_pos = builder._playlist_pos
 	self.playlist_count = builder._playlist_count
+	self.time_pos = builder._time_pos
+	self.duration = builder._duration
 
 	return self
 end
