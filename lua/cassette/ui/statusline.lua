@@ -140,7 +140,7 @@ local function _render_playlist(section, data)
 		)
 		return ""
 	end
-	return string.format(format, data.playlist_pos, data.playlist_count)
+	return string.format(format, data.playlist_pos + 1, data.playlist_count)
 end
 
 local function _render_time(section, data)
