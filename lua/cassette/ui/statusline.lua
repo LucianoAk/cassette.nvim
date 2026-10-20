@@ -140,6 +140,7 @@ local function _render_playlist(section, data)
 	return string.format(format, data.playlist_pos + 1, data.playlist_count)
 end
 
+-- FIX: streamed content does not have duration
 local function _render_time(section, data)
 	local id, cycle = data.id, section.sync_cycle
 
