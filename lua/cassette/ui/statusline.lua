@@ -164,6 +164,7 @@ local function _render_time(section, data)
 	end
 
 	if not time_timer.handle then
+		-- TODO: instead of timers for this and other things, add a global timer with attachable tasks
 		time_timer.handle = vim.uv.new_timer()
 		if not time_timer.handle then
 			Logger.warn(MODULE_ORIGIN, "could not render 'time' section, no sync timer could not be created")
